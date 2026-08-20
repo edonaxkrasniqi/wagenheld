@@ -22,13 +22,26 @@ const sectionComponents: Record<SectionId, () => React.ReactNode> = {
   footer: Footer,
 }
 
+/**
+ * Header und Footer stehen außerhalb von <main>, damit die Seite genau eine
+ * Hauptregion hat. Sonst springt der Sprunglink ins Menü statt in den Inhalt.
+ */
 export default function Home() {
+  const ids = pageConfig.sections.map((section) => section.id)
+  const hasHeader = ids.includes('header')
+  const hasFooter = ids.includes('footer')
+  const mainIds = ids.filter((id) => id !== 'header' && id !== 'footer')
+
   return (
     <div className="flex flex-col flex-1">
-      {pageConfig.sections.map(({ id }) => {
-        const Section = sectionComponents[id]
-        return <Section key={id} />
-      })}
+      {hasHeader && <Header />}
+      <main id="inhalt" className="flex flex-col flex-1">
+        {mainIds.map((id) => {
+          const Section = sectionComponents[id]
+          return <Section key={id} />
+        })}
+      </main>
+      {hasFooter && <Footer />}
     </div>
   )
 }

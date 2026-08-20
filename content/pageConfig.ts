@@ -6,7 +6,8 @@ export const pageConfig: PageConfig = {
     { id: 'hero' },
     { id: 'benefits' },
     { id: 'inventory' },
-    { id: 'reviews' },
+    // 'reviews' ist bewusst deaktiviert — siehe content/reviews.ts.
+    // Erst wieder aufnehmen, wenn echte Bewertungen vorliegen.
     { id: 'vehicleSellingForm' },
     { id: 'about' },
     { id: 'contactBar' },

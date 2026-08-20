@@ -72,11 +72,15 @@ export interface ContactItem {
   label: string
   value: string
   href?: string
+  /** Öffnet in einem neuen Tab, mit rel="noopener noreferrer". */
+  external?: boolean
 }
 
 export interface HeroContent {
   label: string
   headline: string
+  /** Kurzer Claim unter dem Firmennamen. Echter Text, nicht Teil des Bildes. */
+  slogan: string
   paragraph: string
   primaryCta: { label: string; href: string }
   secondaryCta: { label: string; href: string }

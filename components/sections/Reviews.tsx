@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { ReviewCard } from '@/components/ui/ReviewCard'
@@ -6,7 +5,14 @@ import { StarRating } from '@/components/ui/StarRating'
 import { Reveal } from '@/components/ui/Reveal'
 import { reviews, googleRating } from '@/content/reviews'
 
+/**
+ * Rendert nichts, solange keine echten Bewertungen hinterlegt sind.
+ * Der Abschnitt ist zusätzlich aus content/pageConfig.ts entfernt.
+ * Hintergrund steht in content/reviews.ts.
+ */
 export function Reviews() {
+  if (reviews.length === 0) return null
+
   return (
     <section className="bg-surface-low border-y border-outline-variant">
       <Reveal className="max-w-[1280px] mx-auto px-5 md:px-10 py-20 md:py-28">
@@ -15,22 +21,19 @@ export function Reviews() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
             Das sagen unsere Kunden
           </h2>
-          <div className="flex items-center gap-3">
-            <Image
-              src={googleRating.logoUrl}
-              alt="Google"
-              width={24}
-              height={24}
-              className="h-6 w-auto"
-            />
-            <StarRating rating={googleRating.score} />
-            <Link
-              href={googleRating.reviewsUrl}
-              className="text-sm font-semibold text-on-surface-variant hover:text-gold transition-colors"
-            >
-              {googleRating.score} ({googleRating.count} Bewertungen)
-            </Link>
-          </div>
+          {googleRating && (
+            <div className="flex items-center gap-3">
+              <StarRating rating={googleRating.score} />
+              <Link
+                href={googleRating.reviewsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-on-surface-variant hover:text-gold-ink transition-colors"
+              >
+                {googleRating.score} ({googleRating.count} Bewertungen bei Google)
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

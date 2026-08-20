@@ -9,23 +9,27 @@ export const navItems: NavItem[] = [
   { label: 'Kontakt', href: '#kontakt', icon: 'contact_support' },
 ]
 
+/**
+ * Vorher zeigten hier vier Links ins Leere (href: '#') auf Leistungen, die
+ * der Kunde nie genannt hat — Leasing, Werkstatt-Service, Garantie-Check.
+ * Ersetzt durch die tatsächlich vorhandenen Abschnitte und Pflichtseiten.
+ */
 export const footerNavColumns: FooterNavColumn[] = [
   {
     heading: 'Navigation',
     links: [
-      { label: 'Startseite', href: '#' },
       { label: 'Fahrzeuge auf mobile.de', href: '#fahrzeuge' },
-      { label: 'Ankauf & Bewertung', href: '#ankauf' },
-      { label: 'Serviceleistungen', href: '#leistungen' },
+      { label: 'Fahrzeug verkaufen', href: '#ankauf' },
+      { label: 'Leistungen', href: '#leistungen' },
+      { label: 'Über uns', href: '#ueber-uns' },
+      { label: 'Kontakt', href: '#kontakt' },
     ],
   },
   {
-    heading: 'Leistungen',
+    heading: 'Rechtliches',
     links: [
-      { label: 'Finanzierung', href: '#' },
-      { label: 'Leasing', href: '#' },
-      { label: 'Werkstatt-Service', href: '#' },
-      { label: 'Garantie-Check', href: '#' },
+      { label: 'Impressum', href: '/impressum' },
+      { label: 'Datenschutzerklärung', href: '/datenschutz' },
     ],
   },
 ]

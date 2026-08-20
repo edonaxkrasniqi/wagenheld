@@ -1,51 +1,69 @@
 import type { AboutContent, ContactItem, HeroContent } from '@/lib/types'
 
+/**
+ * Alle Angaben stammen aus den Kundenkarten im Trello-Board "Wagenheld"
+ * (Liste 🧹 Geklärt). Nichts hier ist erfunden. Was der Kunde nicht geliefert
+ * hat, steht als OFFEN-Kommentar drüber und fehlt bewusst.
+ */
+
 export const heroContent: HeroContent = {
-  label: 'Automobilzentrum',
+  label: 'Automobilzentrum Wagenheld · Bruchsal',
   headline: 'WAGENHELD',
+  // OFFEN (Ari): Der endgültige Slogan fehlt. Bis dahin steht hier die
+  // Formulierung aus der Kundenkarte #21 im Original-Wortlaut.
+  slogan: 'Erfahrung, auf die Sie sich verlassen können.',
   paragraph:
-    'Qualität ist kein Ziel — es ist ein Versprechen. Ihr kompetenter Partner für Premiumfahrzeuge und erstklassigen Service in der Region.',
-  primaryCta: { label: 'Fahrzeug kaufen', href: '#fahrzeuge' },
-  secondaryCta: { label: 'Jetzt kontaktieren', href: '#kontakt' },
+    'Sorgfältig ausgewählte Gebrauchtwagen aus über 10 Jahren Erfahrung im Gebrauchtwagenhandel. Persönliche Beratung in Bruchsal, Zulassung im Raum Karlsruhe.',
+  primaryCta: { label: 'Fahrzeuge ansehen', href: '#fahrzeuge' },
+  secondaryCta: { label: 'Fahrzeug verkaufen', href: '#ankauf' },
+  // OFFEN (Ari): Die drei Fotos vom 17.08. liegen als Trello-Karten #1–3.
+  // Sobald geklärt ist, ob das die Aufnahmen des Autozentrums sind, ersetzen
+  // sie dieses Bild.
   imageUrl: '/images/hero.jpg',
   imageAlt:
-    'WAGENHELD Autohaus bei Sonnenuntergang mit drei Premiumfahrzeugen vor dem Gebäude',
+    'Fahrzeuge auf dem Gelände des Automobilzentrums Wagenheld in Bruchsal',
 }
 
 export const aboutContent: AboutContent = {
   label: 'Über Wagenheld',
-  headline: 'Tradition trifft moderne Mobilität.',
+  headline: 'Ein Gebrauchtwagenhandel, der aus Erfahrung auswählt.',
   paragraphs: [
-    'Seit über 15 Jahren stehen wir für Vertrauen und Qualität im Automobilhandel. Unser Anspruch ist es, für jeden Kunden das perfekt passende Fahrzeug zu finden.',
-    'In unserer modernen Betriebsstätte kombinieren wir fachliche Expertise mit einer Leidenschaft für Technik. Jedes Fahrzeug durchläuft bei uns einen strengen Qualitätscheck, bevor es in den Verkauf geht.',
+    'Das Automobilzentrum Wagenheld ist ein Gebrauchtwagenhandel in Bruchsal. Dahinter stehen über zehn Jahre Erfahrung im Gebrauchtwagenhandel — und ein Bestand, den wir nicht nach Masse, sondern nach Zustand zusammenstellen.',
+    'Wir zeigen Ihnen die Wartungshistorie eines Fahrzeugs, nehmen Ihren Wagen zu einem fairen Preis in Zahlung und übernehmen die Zulassung im Raum Karlsruhe. Was wir nicht wissen, sagen wir Ihnen. Das ist der ganze Trick.',
   ],
-  ctaLabel: 'Mehr über uns',
+  ctaLabel: 'Kontakt aufnehmen',
   imageUrl: '/images/about.jpg',
-  imageAlt: 'Moderner Autohaus-Showroom von WAGENHELD mit ausgestellten Fahrzeugen',
+  imageAlt: 'Verkaufsgespräch im Automobilzentrum Wagenheld',
 }
 
+// OFFEN (Ari): Öffnungszeiten sind bislang nicht geliefert worden. Deshalb
+// steht hier keine Kachel dazu — geraten wird nicht.
 export const contactItems: ContactItem[] = [
   {
     icon: 'call',
-    label: 'Rufen Sie uns an',
-    value: '+49 (0) 123 456 789',
-    href: 'tel:+490123456789',
+    label: 'Anrufen',
+    value: '0179 1596072',
+    href: 'tel:+491791596072',
   },
   {
     icon: 'mail',
     label: 'E-Mail schreiben',
-    value: 'info@wagenheld.de',
-    href: 'mailto:info@wagenheld.de',
+    value: 'info@automobilzentrum-wagenheld.de',
+    href: 'mailto:info@automobilzentrum-wagenheld.de',
   },
   {
     icon: 'location_on',
-    label: 'Besuchen Sie uns',
-    value: 'Automobilstraße 1, Berlin',
+    label: 'Vor Ort',
+    value: 'Im Schollengarten 14, 76646 Bruchsal',
+    href: 'https://www.openstreetmap.org/search?query=Im%20Schollengarten%2014%2C%2076646%20Bruchsal',
+    external: true,
   },
   {
-    icon: 'schedule',
-    label: 'Öffnungszeiten',
-    value: 'Mo–Fr: 09:00–18:00 Uhr',
+    icon: 'directions_car',
+    label: 'Fahrzeugbestand',
+    value: 'Tagesaktuell auf mobile.de',
+    href: 'https://home.mobile.de/AUTOMOBILZENTRUMWAGENHELDGBR',
+    external: true,
   },
 ]
 

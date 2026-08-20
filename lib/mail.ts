@@ -1,16 +1,14 @@
 import { Resend } from 'resend'
 import type { SellingFormData } from '@/lib/schemas'
-import { contactItems } from '@/content/about'
-
-const dealerEmail =
-  contactItems.find((item) => item.icon === 'mail')?.value ?? 'info@wagenheld.de'
+import { company } from '@/lib/site'
 
 export async function sendSellingLead(data: SellingFormData): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
+    // Bewusst ohne die Formulardaten im Log: das sind personenbezogene Daten
+    // und Server-Logs sind kein Ablageort dafür.
     console.error(
-      '[mail] RESEND_API_KEY ist nicht gesetzt – Ankauf-Anfrage wurde NICHT per E-Mail versendet:',
-      data
+      '[mail] RESEND_API_KEY ist nicht gesetzt — Ankauf-Anfrage wurde NICHT versendet.'
     )
     return false
   }
@@ -18,18 +16,20 @@ export async function sendSellingLead(data: SellingFormData): Promise<boolean> {
   const resend = new Resend(apiKey)
   const { error } = await resend.emails.send({
     from: process.env.LEAD_FROM_EMAIL ?? 'Wagenheld Website <onboarding@resend.dev>',
-    to: process.env.LEAD_TO_EMAIL ?? dealerEmail,
+    to: process.env.LEAD_TO_EMAIL ?? company.email,
     replyTo: data.email,
-    subject: `Neue Ankauf-Anfrage: ${data.make} ${data.model} (${data.year})`,
+    subject: `Neue Ankauf-Anfrage: ${data.make} ${data.model} (EZ ${data.firstRegistration})`,
     text: [
       `Marke: ${data.make}`,
       `Modell: ${data.model}`,
-      `Baujahr: ${data.year}`,
-      `Kilometerstand: ${data.mileage} km`,
+      `Erstzulassung: ${data.firstRegistration}`,
+      `Kilometerstand: ${data.mileage.toLocaleString('de-DE')} km`,
       '',
       `Name: ${data.name}`,
       `E-Mail: ${data.email}`,
       `Telefon: ${data.phone || '-'}`,
+      '',
+      'Einwilligung in die Datenschutzhinweise: erteilt',
     ].join('\n'),
   })
 
