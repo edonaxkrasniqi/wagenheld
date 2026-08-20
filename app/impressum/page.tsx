@@ -91,13 +91,13 @@ export default function ImpressumPage() {
                   Registergericht und Registernummer (GsR …)
                 </Offen>
               </p>
-              <p className="mt-2 text-sm">
-                Eine nicht eingetragene GbR steht in keinem Register. Der zuvor
-                hier stehende Handelsregister-Abschnitt war falsch und ist
-                entfernt. Seit dem 01.01.2024 kann sich eine GbR freiwillig ins
-                Gesellschaftsregister eintragen lassen; nur dann gehören
-                Registergericht und Nummer ins Impressum.
-              </p>
+              {/*
+                Hier stand vorher ein Handelsregister-Abschnitt. Eine GbR steht
+                nicht im Handelsregister. Seit dem 01.01.2024 kann sie sich
+                freiwillig ins Gesellschaftsregister eintragen lassen (dann
+                "eGbR", Registernummer GsR …). Ist sie das nicht, gehört dieser
+                ganze Abschnitt ersatzlos gestrichen.
+              */}
             </section>
 
             <section>
@@ -130,12 +130,12 @@ export default function ImpressumPage() {
                 Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
                 teilzunehmen.
               </p>
-              <p className="mt-2 text-sm">
-                Der Link zur EU-Plattform für Online-Streitbeilegung wurde
-                entfernt. Die Plattform hat ihren Betrieb am 20.07.2025
-                eingestellt; ein weiterhin gesetzter Hinweis führt auf eine tote
-                Seite und gilt als irreführend.
-              </p>
+              {/*
+                Der frühere Link auf ec.europa.eu/consumers/odr ist entfernt.
+                Die EU-Plattform zur Online-Streitbeilegung hat den Betrieb am
+                20.07.2025 eingestellt. Ein Hinweis darauf zeigt seitdem ins
+                Leere und ist selbst irreführend.
+              */}
             </section>
 
             <section>

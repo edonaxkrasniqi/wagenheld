@@ -1,6 +1,18 @@
 import type { Benefit } from '@/lib/types'
 
 /**
+ * WICHTIG: public/fonts/material-symbols-outlined.woff2 ist ein Subset. Es
+ * enthaelt nur die Symbole, die beim Erstellen ausgewaehlt wurden. Ein Name,
+ * der nicht im Subset steckt, wird vom Browser als roher Text ausgegeben —
+ * auf der Seite stand dann woertlich "workspace_premium". Neue Symbolnamen
+ * deshalb immer erst im Browser pruefen oder das Subset neu erzeugen.
+ *
+ * Aktuell verfuegbar: verified, history, payments, gavel, handshake,
+ * local_shipping, call, mail, location_on, schedule, home, directions_car,
+ * sell, handyman, info, contact_support, menu, close, open_in_new, star.
+ */
+
+/**
  * Wortlaut aus den Kundenkarten #12–18 und #21, redaktionell geglättet.
  *
  * Bewusst entschärft gegenüber dem alten Stand:
@@ -15,7 +27,7 @@ import type { Benefit } from '@/lib/types'
  */
 export const benefits: Benefit[] = [
   {
-    icon: 'workspace_premium',
+    icon: 'verified',
     headline: 'Über 10 Jahre',
     description: 'Erfahrung im Gebrauchtwagenhandel',
   },
@@ -24,7 +36,7 @@ export const benefits: Benefit[] = [
     // Solange nicht feststeht, ob DEKRA, TÜV oder eigene Werkstatt gemeint
     // ist, bleibt es bei der neutralen Formulierung. Eine Prüfsiegel-Aussage
     // ohne Deckung ist nach § 5 UWG angreifbar.
-    icon: 'checklist',
+    icon: 'handyman',
     headline: 'Sorgfältig ausgewählt',
     description: 'Jedes Fahrzeug wird vor dem Verkauf durchgesehen',
   },
@@ -39,7 +51,7 @@ export const benefits: Benefit[] = [
     description: 'Individuell möglich',
   },
   {
-    icon: 'verified_user',
+    icon: 'gavel',
     headline: 'Garantie',
     description: 'Optional bis zu 36 Monate',
   },
@@ -49,12 +61,12 @@ export const benefits: Benefit[] = [
     description: 'Zu einem fairen Preis',
   },
   {
-    icon: 'assignment_turned_in',
+    icon: 'local_shipping',
     headline: 'Zulassung',
     description: 'Im Raum Karlsruhe',
   },
   {
-    icon: 'support_agent',
+    icon: 'contact_support',
     headline: 'Persönlich',
     description: 'Beratung vor Ort in Bruchsal',
   },
