@@ -97,6 +97,12 @@
   .icon-filled {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
+
+  /* Dünner Schnitt für den Leistungs-Streifen — entspricht den feinen
+     Linien-Symbolen aus dem Kundenentwurf. */
+  .icon-thin {
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+  }
 }
 
 @layer utilities {

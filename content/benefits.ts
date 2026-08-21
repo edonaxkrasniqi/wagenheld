@@ -13,13 +13,13 @@ import type { Benefit } from '@/lib/types'
  */
 
 /**
- * Vier Kacheln im Kundenwortlaut vom 17.08.
+ * Sechs Kacheln im Kundenwortlaut vom 17.08.
  *
- * Der Kunde hat die Formulierungen selbst festgelegt und anschließend
- * "Wartung" und "Inzahlungnahme" gestrichen, damit die Reihe auf dem Desktop
- * in eine einzige Zeile passt. Damit sind es vier statt der sechs Kacheln,
- * die CR-05 als Akzeptanzkriterium nennt — bewusste Abweichung auf
- * Kundenwunsch. Zwei Punkte zum Wortlaut:
+ * Der Kunde hat die Formulierungen selbst festgelegt. Zwischenzeitlich waren
+ * "Wartung" und "Inzahlungnahme" gestrichen, damit die Reihe in eine Zeile
+ * passt; mit dem Streifen-Layout passen alle sechs nebeneinander, deshalb
+ * stehen sie wieder drin. Sechs Kacheln entsprechen auch dem
+ * Akzeptanzkriterium aus CR-05. Zwei Punkte zum Wortlaut:
  *
  * - "GEPRÜFT / Umfassender Fahrzeugcheck" löst die alte Rohdaten-Karte
  *   "Technisch geprüft bei geprüft" auf. Bewusst ohne Nennung von DEKRA, TÜV
@@ -40,6 +40,11 @@ export const benefits: Benefit[] = [
     description: 'Umfassender Fahrzeugcheck',
   },
   {
+    icon: 'handyman',
+    headline: 'Wartung',
+    description: 'Aktuelle Inspektion nach Herstellervorgabe',
+  },
+  {
     icon: 'payments',
     headline: 'Finanzierung',
     description: 'Individuell möglich',
@@ -52,7 +57,12 @@ export const benefits: Benefit[] = [
     description: 'Optional bis 36 Monate',
   },
   {
-    icon: 'local_shipping',
+    icon: 'handshake',
+    headline: 'Inzahlungnahme',
+    description: 'Faire Bewertung',
+  },
+  {
+    icon: 'directions_car',
     headline: 'Zulassung',
     description: 'Zulassungsservice im Raum Karlsruhe',
   },
