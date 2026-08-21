@@ -1,9 +1,8 @@
 import { Header } from '@/components/sections/Header'
 import { Hero } from '@/components/sections/Hero'
 import { Benefits } from '@/components/sections/Benefits'
-import { Inventory } from '@/components/sections/Inventory'
+import { InventoryAndSelling } from '@/components/sections/InventoryAndSelling'
 import { Reviews } from '@/components/sections/Reviews'
-import { VehicleSellingForm } from '@/components/sections/VehicleSellingForm'
 import { About } from '@/components/sections/About'
 import { ContactBar } from '@/components/sections/ContactBar'
 import { Footer } from '@/components/sections/Footer'
@@ -14,9 +13,8 @@ const sectionComponents: Record<SectionId, () => React.ReactNode> = {
   header: Header,
   hero: Hero,
   benefits: Benefits,
-  inventory: Inventory,
+  inventoryAndSelling: InventoryAndSelling,
   reviews: Reviews,
-  vehicleSellingForm: VehicleSellingForm,
   about: About,
   contactBar: ContactBar,
   footer: Footer,
