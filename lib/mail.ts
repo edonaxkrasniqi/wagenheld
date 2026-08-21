@@ -1,14 +1,18 @@
 import { Resend } from 'resend'
-import type { SellingFormData } from '@/lib/schemas'
+import type { BuyingFormData, SellingFormData } from '@/lib/schemas'
 import { company } from '@/lib/site'
 
-export async function sendSellingLead(data: SellingFormData): Promise<boolean> {
+/**
+ * Gemeinsamer Versandweg für beide Anfragearten.
+ *
+ * Die Formulardaten stehen bewusst nicht im Fehler-Log: das sind
+ * personenbezogene Daten, und Server-Logs sind kein Ablageort dafür.
+ */
+async function send(subject: string, replyTo: string, lines: string[]): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
-    // Bewusst ohne die Formulardaten im Log: das sind personenbezogene Daten
-    // und Server-Logs sind kein Ablageort dafür.
     console.error(
-      '[mail] RESEND_API_KEY ist nicht gesetzt — Ankauf-Anfrage wurde NICHT versendet.'
+      `[mail] RESEND_API_KEY ist nicht gesetzt — Anfrage wurde NICHT versendet (${subject}).`
     )
     return false
   }
@@ -17,9 +21,25 @@ export async function sendSellingLead(data: SellingFormData): Promise<boolean> {
   const { error } = await resend.emails.send({
     from: process.env.LEAD_FROM_EMAIL ?? 'Wagenheld Website <onboarding@resend.dev>',
     to: process.env.LEAD_TO_EMAIL ?? company.email,
-    replyTo: data.email,
-    subject: `Neue Ankauf-Anfrage: ${data.make} ${data.model} (EZ ${data.firstRegistration})`,
-    text: [
+    replyTo,
+    subject,
+    text: lines.join('\n'),
+  })
+
+  if (error) {
+    console.error('[mail] Resend-Versand fehlgeschlagen:', error)
+    return false
+  }
+
+  return true
+}
+
+/** Jemand bietet uns ein Fahrzeug an. */
+export function sendSellingLead(data: SellingFormData): Promise<boolean> {
+  return send(
+    `Neue Ankauf-Anfrage: ${data.make} ${data.model} (EZ ${data.firstRegistration})`,
+    data.email,
+    [
       `Marke: ${data.make}`,
       `Modell: ${data.model}`,
       `Erstzulassung: ${data.firstRegistration}`,
@@ -30,13 +50,20 @@ export async function sendSellingLead(data: SellingFormData): Promise<boolean> {
       `Telefon: ${data.phone || '-'}`,
       '',
       'Einwilligung in die Datenschutzhinweise: erteilt',
-    ].join('\n'),
-  })
+    ]
+  )
+}
 
-  if (error) {
-    console.error('[mail] Resend-Versand fehlgeschlagen:', error)
-    return false
-  }
-
-  return true
+/** Jemand sucht ein Fahrzeug und beschreibt es im Freitext. */
+export function sendBuyingLead(data: BuyingFormData): Promise<boolean> {
+  return send(`Neue Kaufanfrage von ${data.name}`, data.email, [
+    'Gesucht wird:',
+    data.message,
+    '',
+    `Name: ${data.name}`,
+    `E-Mail: ${data.email}`,
+    `Telefon: ${data.phone || '-'}`,
+    '',
+    'Einwilligung in die Datenschutzhinweise: erteilt',
+  ])
 }
