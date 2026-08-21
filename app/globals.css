@@ -17,11 +17,27 @@
    * gold-ink ist der Gold-Ton für Text und bedeutungstragende Icons auf
    * hellem Grund. Das ursprüngliche #b5a188 erreicht auf Weiß nur 2,0:1 und
    * fällt damit durch WCAG 2.1 AA (4,5:1 für Fließtext, 3:1 für Grafik).
-   * #8a7350 erreicht 4,52:1. Das helle Gold bleibt für dunkle Flächen.
+   *
+   * #8a7350 erreichte auf reinem Weiß 4,52:1 — auf dem warmen Off-White des
+   * Mittelbereichs (#f3efe8) aber nur 3,94:1 und fiel dort durch. #7d6746
+   * kommt auf 4,70:1 auf dem warmen Grund und 5,38:1 auf Weiß, passt also auf
+   * beiden. Das helle Gold bleibt für dunkle Flächen.
    */
-  --color-gold-ink: #8a7350;
+  --color-gold-ink: #7d6746;
   --color-beige-light: #eee6da;
   --color-gray-beige: #e5e1da;
+
+  /* ---- Warmes Kartensystem (Mittelbereich) -------------------------
+     Kontraste gegen die Textfarbe #18201f nachgerechnet:
+       auf --color-card (#fcfaf6): 15,9:1
+       auf --color-sand (#dccbb5): 10,5:1
+       --color-warm-muted auf card 7,2:1, auf sand 4,8:1
+     Wer einen dieser Werte ändert, muss neu rechnen. */
+  --color-warm: #f3efe8;
+  --color-sand: #dccbb5;
+  --color-card: #fcfaf6;
+  --color-warm-ink: #18201f;
+  --color-warm-muted: #4d5654;
 
   /* Surface scale */
   --color-background: #fcf9f8;

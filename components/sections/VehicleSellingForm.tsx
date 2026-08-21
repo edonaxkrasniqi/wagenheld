@@ -2,30 +2,33 @@
 
 import { useActionState, useId, useState } from 'react'
 import Link from 'next/link'
-import { SectionLabel } from '@/components/ui/SectionLabel'
-import { Button } from '@/components/ui/Button'
 import { submitSellingForm } from '@/lib/actions'
 import { company } from '@/lib/site'
 import type { FormIntent } from '@/lib/schemas'
 import type { FormState } from '@/lib/types'
 
 /**
- * Felder auf dunklem Grund statt weißer Kästen: die weiße Füllung erschlug den
- * ganzen Abschnitt, das Formular sah aus wie ein fremdes Element in der Karte.
+ * Felder mindestens 52 px hoch — das ist die Größe, bei der ein Feld auf einem
+ * Telefon zuverlässig mit dem Daumen zu treffen ist, und sie gibt dem Formular
+ * die Ruhe, die es vorher nicht hatte.
  *
- * Die Werte sind nicht frei gewählt. Auf Anthrazit (#111719) muss die
- * Feldbegrenzung nach WCAG 1.4.11 mindestens 3:1 erreichen — `white/15`
- * kommt nur auf 1,6:1, `white/40` auf 3,98:1. Der Platzhalter liegt bei
- * `white/50` auf 4,9:1. Wer diese Werte senkt, muss neu rechnen.
+ * `text-base` (16 px) ist kein Geschmack: iOS Safari zoomt die ganze Seite,
+ * sobald ein fokussiertes Feld kleiner gesetzt ist.
  *
- * Kein `outline-none` ohne Ersatz: die Rahmenfarbe allein ist kein
- * Fokusindikator. Der Ring kommt aus der globalen :focus-visible-Regel, die
- * `on-dark` auf die helle Variante umstellt.
+ * Kein `outline-none` ohne Ersatz — die Rahmenfarbe allein ist kein
+ * Fokusindikator. Der Ring kommt aus der globalen :focus-visible-Regel.
+ *
+ * Der Rahmen liegt bei 50 % Deckung und nicht bei den 15 %, die im Entwurf
+ * angedeutet waren. WCAG 1.4.11 verlangt für die Begrenzung eines
+ * Eingabefeldes 3:1 gegen den Untergrund; 15 % erreichen auf #fcfaf6 nur
+ * 1,35:1, das Feld wäre für viele schlicht nicht als Feld erkennbar.
+ * Wer den Wert senkt, muss neu rechnen.
  */
 const inputClasses =
-  'w-full bg-white/[0.06] border border-white/40 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/50 hover:border-white/60 focus:border-gold transition-colors'
+  'w-full min-h-[52px] bg-warm/60 border border-warm-ink/50 rounded-xl px-4 py-3.5 text-base text-warm-ink placeholder:text-warm-muted hover:border-warm-ink/70 focus:border-gold-ink transition-colors'
 
-const labelClasses = 'block text-xs font-semibold uppercase tracking-wide text-white/80 mb-1.5'
+const labelClasses =
+  'block text-sm font-bold uppercase tracking-wide text-warm-muted mb-2'
 
 const initialState: FormState = null
 
@@ -62,10 +65,10 @@ export function VehicleSellingForm() {
       type="button"
       onClick={() => setIntent(value)}
       aria-pressed={intent === value}
-      className={`rounded-md px-3 py-2.5 text-[0.7rem] font-bold uppercase tracking-wider transition-colors ${
+      className={`rounded-full px-3 py-3 text-[0.75rem] font-bold uppercase tracking-wider transition-colors ${
         intent === value
-          ? 'bg-secondary-container text-on-secondary-container'
-          : 'text-white/70 hover:text-gold'
+          ? 'bg-warm-ink text-card'
+          : 'text-warm-muted hover:text-warm-ink'
       }`}
     >
       {label}
@@ -73,19 +76,19 @@ export function VehicleSellingForm() {
   )
 
   return (
-    <div id="ankauf" className="scroll-mt-20">
-      <SectionLabel tone="onDark" className="mb-4">
-        Anfrage senden
-      </SectionLabel>
-      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-3 text-balance">
+    <div
+      id="ankauf"
+      className="h-full scroll-mt-20 rounded-[24px] bg-card p-10 md:p-12"
+    >
+      <h3 className="text-2xl md:text-[1.75rem] font-bold leading-tight tracking-tight text-balance">
         {text.headline}
-      </h2>
-      <p className="text-sm leading-relaxed text-white/75 mb-7">{text.lead}</p>
+      </h3>
+      <p className="mt-4 leading-relaxed text-warm-muted">{text.lead}</p>
 
       <div
         role="group"
         aria-label="Art der Anfrage"
-        className="mb-7 grid grid-cols-2 gap-1 rounded-lg border border-white/20 p-1"
+        className="mt-7 mb-8 grid grid-cols-2 gap-1 rounded-full border border-warm-ink/50 bg-warm/60 p-1"
       >
         {toggle('sell', 'Ich möchte verkaufen')}
         {toggle('buy', 'Ich möchte kaufen')}
@@ -155,7 +158,7 @@ export function VehicleSellingForm() {
                 aria-describedby={`${id}-ez-hint`}
                 className={inputClasses}
               />
-              <p id={`${id}-ez-hint`} className="mt-1.5 text-xs text-white/60">
+              <p id={`${id}-ez-hint`} className="mt-2 text-sm text-warm-muted">
                 Steht im Fahrzeugschein unter Punkt B.
               </p>
             </div>
@@ -185,11 +188,11 @@ export function VehicleSellingForm() {
               id={`${id}-message`}
               name="message"
               required
-              rows={4}
+              rows={5}
               placeholder="z. B. Kombi, Automatik, bis 20.000 € — oder einfach, was Ihnen wichtig ist."
               className={`${inputClasses} resize-y`}
             />
-            <p className="mt-1.5 text-xs text-white/60">
+            <p className="mt-2 text-sm text-warm-muted">
               Sie müssen sich noch nicht festlegen. Ein paar Stichworte genügen.
             </p>
           </div>
@@ -244,12 +247,12 @@ export function VehicleSellingForm() {
             sich ziehen. Der Hinweis auf die E-Mail erreicht dasselbe Ziel
             ohne dieses Risiko.
           */
-          <p className="sm:col-span-2 text-xs text-white/60 leading-relaxed">
+          <p className="sm:col-span-2 text-sm text-warm-muted leading-relaxed">
             Sie haben den Fahrzeugschein zur Hand? Schicken Sie ihn uns gern im
             Anschluss per E-Mail an{' '}
             <a
               href={`mailto:${company.email}?subject=${encodeURIComponent('Fahrzeugschein zu meiner Ankauf-Anfrage')}`}
-              className="text-gold hover:underline break-words"
+              className="text-gold-ink underline underline-offset-2 hover:no-underline break-words"
             >
               {company.email}
             </a>
@@ -263,13 +266,13 @@ export function VehicleSellingForm() {
             name="consent"
             type="checkbox"
             required
-            className="mt-1 h-4 w-4 shrink-0 accent-gold"
+            className="mt-0.5 h-5 w-5 shrink-0 accent-warm-ink"
           />
-          <label htmlFor={`${id}-consent`} className="text-xs text-white/75 leading-relaxed">
+          <label htmlFor={`${id}-consent`} className="text-sm text-warm-muted leading-relaxed">
             Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner
             Anfrage gespeichert und verarbeitet werden. Die Einwilligung kann
             jederzeit widerrufen werden. Weitere Informationen in der{' '}
-            <Link href="/datenschutz" className="text-gold hover:underline">
+            <Link href="/datenschutz" className="text-gold-ink underline underline-offset-2 hover:no-underline">
               Datenschutzerklärung
             </Link>
             .
@@ -280,22 +283,21 @@ export function VehicleSellingForm() {
           <p
             role="status"
             aria-live="polite"
-            className={`sm:col-span-2 text-sm ${
-              state.success ? 'text-gold' : 'text-red-300'
+            className={`sm:col-span-2 text-sm font-semibold ${
+              state.success ? 'text-gold-ink' : 'text-red-700'
             }`}
           >
             {state.message}
           </p>
         )}
 
-        <Button
+        <button
           type="submit"
           disabled={pending}
-          variant="secondary"
-          className="sm:col-span-2 mt-3 disabled:opacity-60"
+          className="sm:col-span-2 mt-3 min-h-[56px] rounded-xl bg-warm-ink px-8 text-sm font-bold uppercase tracking-wider text-card transition-colors hover:bg-warm-muted disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? 'Wird gesendet…' : text.submit}
-        </Button>
+        </button>
       </form>
     </div>
   )
