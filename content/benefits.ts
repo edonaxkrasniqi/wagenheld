@@ -13,37 +13,31 @@ import type { Benefit } from '@/lib/types'
  */
 
 /**
- * Wortlaut aus den Kundenkarten #12–18 und #21, redaktionell geglättet.
+ * Vier Kacheln im Kundenwortlaut vom 17.08.
  *
- * Bewusst entschärft gegenüber dem alten Stand:
- * - "Ab 1,99 % Zinsen" ist ersatzlos raus. Eine konkrete Zinsangabe löst nach
- *   § 6a PAngV die Pflicht zu einem repräsentativen Beispiel aus (effektiver
- *   Jahreszins, Nettodarlehensbetrag, Laufzeit, Gesamtbetrag). Der Kunde hat
- *   nur "Finanzierung individuell möglich" gesagt.
- * - "Bestpreis-Garantie" ist raus. Der Kunde sagte "fairer Preis".
- * - Garantie steht jetzt bei den vom Kunden genannten 36 Monaten, ausdrücklich
- *   als optional. OFFEN (Ari): Bedingungen und Garantiegeber fehlen noch.
- * - "Zulassung deutschlandweit" ist raus. Der Kunde sagte "Raum Karlsruhe".
+ * Der Kunde hat die Formulierungen selbst festgelegt und anschließend
+ * "Wartung" und "Inzahlungnahme" gestrichen, damit die Reihe auf dem Desktop
+ * in eine einzige Zeile passt. Damit sind es vier statt der sechs Kacheln,
+ * die CR-05 als Akzeptanzkriterium nennt — bewusste Abweichung auf
+ * Kundenwunsch. Zwei Punkte zum Wortlaut:
+ *
+ * - "GEPRÜFT / Umfassender Fahrzeugcheck" löst die alte Rohdaten-Karte
+ *   "Technisch geprüft bei geprüft" auf. Bewusst ohne Nennung von DEKRA, TÜV
+ *   oder einer Meisterwerkstatt: ein Prüfsiegel ohne Deckung ist nach § 5 UWG
+ *   angreifbar, und der Kunde hat kein konkretes Siegel benannt.
+ * - "ZULASSUNG" bleibt hier stehen, obwohl die Änderungsanforderung CR-05
+ *   vorschlug, sie in einen eigenen Service-Abschnitt zu verschieben. Der
+ *   Kunde hat die sechs Punkte als eine Reihe geliefert, und Kundenwortlaut
+ *   hat Vorrang. Die geforderte Zahl von sechs Kacheln stimmt so ohnehin.
+ *
+ * Weiterhin bewusst nicht enthalten: konkrete Zinssätze (§ 6a PAngV),
+ * "Bestpreis-Garantie" und "Zulassung deutschlandweit".
  */
 export const benefits: Benefit[] = [
   {
     icon: 'verified',
-    headline: 'Über 10 Jahre',
-    description: 'Erfahrung im Gebrauchtwagenhandel',
-  },
-  {
-    // OFFEN (Ari): Kundenkarte #13 lautet "Technisch geprüft bei geprüft".
-    // Solange nicht feststeht, ob DEKRA, TÜV oder eigene Werkstatt gemeint
-    // ist, bleibt es bei der neutralen Formulierung. Eine Prüfsiegel-Aussage
-    // ohne Deckung ist nach § 5 UWG angreifbar.
-    icon: 'handyman',
-    headline: 'Sorgfältig ausgewählt',
-    description: 'Jedes Fahrzeug wird vor dem Verkauf durchgesehen',
-  },
-  {
-    icon: 'history',
-    headline: 'Wartungshistorie',
-    description: 'Auf Wunsch einsehbar',
+    headline: 'Geprüft',
+    description: 'Umfassender Fahrzeugcheck',
   },
   {
     icon: 'payments',
@@ -53,21 +47,13 @@ export const benefits: Benefit[] = [
   {
     icon: 'gavel',
     headline: 'Garantie',
-    description: 'Optional bis zu 36 Monate',
-  },
-  {
-    icon: 'handshake',
-    headline: 'Inzahlungnahme',
-    description: 'Zu einem fairen Preis',
+    // OFFEN (Ari): Garantiegeber, Deckungsumfang und Kosten fehlen weiterhin.
+    // § 479 BGB verlangt Inhalt und Bedingungen, sobald damit geworben wird.
+    description: 'Optional bis 36 Monate',
   },
   {
     icon: 'local_shipping',
     headline: 'Zulassung',
-    description: 'Im Raum Karlsruhe',
-  },
-  {
-    icon: 'contact_support',
-    headline: 'Persönlich',
-    description: 'Beratung vor Ort in Bruchsal',
+    description: 'Zulassungsservice im Raum Karlsruhe',
   },
 ]
