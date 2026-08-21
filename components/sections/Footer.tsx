@@ -8,18 +8,13 @@ export function Footer() {
     <footer className="on-dark bg-anthracite text-white/75">
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         <div className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-4">
-            <Image
-              src="/images/logo-mark-white.png"
-              alt=""
-              width={829}
-              height={532}
-              className="h-9 w-auto"
-            />
-            <span className="text-lg font-bold tracking-tighter text-white uppercase">
-              WAGENHELD
-            </span>
-          </div>
+          <Image
+            src="/images/logo-white.png"
+            alt=""
+            width={1149}
+            height={867}
+            className="h-20 w-auto mb-5"
+          />
           <address className="not-italic text-sm leading-relaxed">
             {company.legalName}
             <br />

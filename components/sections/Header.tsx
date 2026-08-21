@@ -34,25 +34,28 @@ export function Header() {
     <>
       <header
         className={`fixed top-0 left-0 w-full z-50 bg-anthracite border-b border-white/5 transition-all duration-300 ${
-          scrolled ? 'h-16 shadow-lg' : 'h-20'
+          scrolled ? 'h-12 shadow-lg' : 'h-14'
         }`}
       >
         <div className="max-w-[1280px] mx-auto px-5 md:px-10 h-full flex items-center justify-between">
+          {/* Waagerechte Sperrung wie im Kundenentwurf: Bildmarke, daneben der
+              Schriftzug. Die gestapelte Vollversion des Logos braucht mehr
+              Höhe, als eine schlanke Leiste hergibt. */}
           <Link
             href="#"
-            className="flex items-center gap-3 rounded"
-            aria-label="Wagenheld – zur Startseite"
+            className="flex items-center gap-2.5 rounded"
+            aria-label="Automobilzentrum Wagenheld – zur Startseite"
           >
             <Image
               src="/images/logo-mark-white.png"
               alt=""
               width={829}
               height={532}
-              className="h-9 w-auto"
+              className="h-7 w-auto"
               priority
             />
-            <span className="text-lg font-bold tracking-tighter text-white uppercase select-none">
-              WAGENHELD
+            <span className="text-base font-bold tracking-tight text-white uppercase select-none leading-none">
+              Wagenheld
             </span>
           </Link>
 
@@ -74,19 +77,19 @@ export function Header() {
 
           <Link
             href="#ankauf"
-            className="hidden md:inline-flex items-center bg-secondary-container text-on-secondary-container text-sm font-bold px-6 py-3 rounded-lg hover:bg-secondary-fixed transition-colors uppercase tracking-wider"
+            className="hidden md:inline-flex items-center bg-secondary-container text-on-secondary-container text-xs font-bold px-5 py-2.5 rounded-lg hover:bg-secondary-fixed transition-colors uppercase tracking-wider"
           >
             Fahrzeug anbieten
           </Link>
 
           <button
-            className="md:hidden text-white p-2 rounded"
+            className="md:hidden text-white p-1.5 rounded"
             onClick={() => setMobileOpen(true)}
             aria-label="Menü öffnen"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
           >
-            <Icon name="menu" className="text-3xl" />
+            <Icon name="menu" className="text-2xl" />
           </button>
         </div>
       </header>
