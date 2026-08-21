@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Icon } from '@/components/ui/Icon'
 import { inventoryContent } from '@/content/inventory'
@@ -34,6 +35,19 @@ export function InventoryPanel() {
         <Icon name="open_in_new" className="text-lg" />
         <span className="sr-only">(öffnet in neuem Tab)</span>
       </Link>
+
+      {/* Füllt die Spalte, die neben dem längeren Formular sonst leer ausläuft.
+          `aria-hidden` plus leerer Alt-Text: das Bild zeigt nichts, was der
+          Text nicht schon sagt — für Screenreader wäre es reines Rauschen. */}
+      <Image
+        src="/images/Innenansicht.png"
+        alt=""
+        aria-hidden="true"
+        width={1680}
+        height={933}
+        sizes="(max-width: 1024px) 100vw, 45vw"
+        className="mt-10 hidden lg:block w-full h-auto rounded-lg border border-white/10"
+      />
     </div>
   )
 }
