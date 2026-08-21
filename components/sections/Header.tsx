@@ -23,29 +23,30 @@ export function Header() {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 bg-anthracite border-b border-white/5 transition-all duration-300 ${
-        scrolled ? 'h-12 shadow-lg' : 'h-14'
+        scrolled ? 'h-14 shadow-lg' : 'h-16'
       }`}
     >
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 h-full flex items-center justify-between">
-        {/* Waagerechte Sperrung wie im Kundenentwurf: Bildmarke, daneben der
-            Schriftzug. Die gestapelte Vollversion des Logos braucht mehr Höhe,
-            als eine schlanke Leiste hergibt. */}
+        {/* Das Volllogo, weiße Fassung — auf der dunklen Leiste ist die
+            dunkle Datei unsichtbar. Es trägt den Schriftzug bereits, ein
+            zweites gesetztes "WAGENHELD" daneben wäre dieselbe Aussage
+            zweimal. Die Leiste ist dafür 8 px höher als zuvor; das Logo ist
+            gestapelt und braucht diese Höhe, um lesbar zu bleiben. */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 rounded"
+          className="flex items-center rounded"
           aria-label="Automobilzentrum Wagenheld – zur Startseite"
         >
           <Image
-            src="/images/logo-mark-white.png"
+            src="/images/logo-white.png"
             alt=""
-            width={829}
-            height={532}
-            className="h-7 w-auto"
+            width={1149}
+            height={867}
+            className={`w-auto transition-[height] duration-300 ${
+              scrolled ? 'h-10' : 'h-12'
+            }`}
             priority
           />
-          <span className="text-base font-bold tracking-tight text-white uppercase select-none leading-none">
-            Wagenheld
-          </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8" aria-label="Hauptnavigation">

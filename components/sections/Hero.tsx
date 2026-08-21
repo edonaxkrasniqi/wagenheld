@@ -25,7 +25,7 @@ function Arrow() {
 
 export function Hero() {
   return (
-    <section id="top" className="on-dark relative bg-anthracite pt-14 overflow-hidden">
+    <section id="top" className="on-dark relative bg-anthracite pt-16 overflow-hidden">
       <div className="absolute inset-0">
         <Image
           src={heroContent.imageUrl}
