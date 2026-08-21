@@ -1,80 +1,96 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { SectionLabel } from '@/components/ui/SectionLabel'
-import { CarSilhouette } from '@/components/ui/CarSilhouette'
-import { Icon } from '@/components/ui/Icon'
 import { heroContent } from '@/content/about'
-import { company } from '@/lib/site'
+
+/** Kleiner Pfeil für die Handlungsaufforderungen.
+ *  Bewusst als Inline-SVG und nicht als Icon-Name: das lokale Symbol-Subset
+ *  enthält kein `arrow_forward`, und ein fehlender Name wird vom Browser
+ *  wörtlich als Text ausgegeben. */
+function Arrow() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="h-4 w-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h13M13 6l6 6-6 6" />
+    </svg>
+  )
+}
 
 export function Hero() {
   return (
-    <section className="on-dark relative bg-anthracite pt-20 overflow-hidden">
+    <section id="top" className="on-dark relative bg-anthracite pt-14 overflow-hidden">
       <div className="absolute inset-0">
         <Image
           src={heroContent.imageUrl}
           alt={heroContent.imageAlt}
           fill
           priority
-          className="object-cover opacity-35"
+          // Das Fahrzeug steht rechts, links bleibt Fläche für den Text. Auf
+          // dem Handy schneidet `object-cover` so stark, dass zentriert nur
+          // der leere Teil zu sehen wäre — deshalb dort rechts ausrichten.
+          // Der Leuchtstreifen ist die einzige helle Stelle des Bildes; auf
+          // schmalen Breiten kann er hinter den Text geraten, deshalb bleibt
+          // der Schleier dort auf dem gerechneten Wert.
+          className="object-cover object-right md:object-center"
           sizes="100vw"
         />
         {/*
-          Overlay sichert die Lesbarkeit über dem Foto. Der Verlauf ist unten
-          fast deckend, damit der Text auch bei einem hellen Bild die
-          geforderten 4,5:1 erreicht (Akzeptanzkriterium Trello-Karte #29).
+          Overlay sichert die Lesbarkeit (Akzeptanzkriterium Trello-Karte #29:
+          4,5:1 an der dunkelsten und an der hellsten Stelle).
+
+          Die Deckung ist gerechnet, nicht geschätzt — maßgeblich ist der
+          ungünstigste Fall, ein reinweißer Bildpunkt direkt hinter dem
+          Gold-Teil der Überschrift:
+            80 % Schleier → 3,89:1  (durchgefallen)
+            85 % Schleier → 4,64:1  (bestanden)
+          Gold #b5a188 ist der kritische Ton; Weiß liegt an derselben Stelle
+          über 7:1. Wer den Wert senkt, muss neu rechnen.
+
+          Ab md läuft der Verlauf nach rechts auf 10 % aus, damit das Fahrzeug
+          nicht im Schleier absäuft. Das ist zulässig, weil die Überschrift bei
+          `max-w-2xl` endet — an ihrer rechten Kante liegt die Deckung noch bei
+          rund 87 % und damit über dem geforderten Wert.
         */}
-        <div className="absolute inset-0 bg-gradient-to-t from-anthracite via-anthracite/85 to-anthracite/55" />
+        <div className="absolute inset-0 bg-anthracite/85 md:hidden" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-anthracite via-anthracite/85 to-anthracite/10" />
       </div>
 
-      <CarSilhouette className="pointer-events-none absolute -bottom-6 right-0 w-[min(760px,105%)] text-white/[0.055]" />
-
-      <div className="relative max-w-[1280px] mx-auto px-5 md:px-10 py-28 md:py-44 flex flex-col items-start">
-        <SectionLabel tone="onDark" className="mb-6">
-          {heroContent.label}
-        </SectionLabel>
-
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white uppercase leading-[0.95]">
-          {heroContent.headline}
+      <div className="relative max-w-[1280px] mx-auto px-5 md:px-10 py-20 md:py-28">
+        {/* Zweifarbig gesetzt, aber ein einziger Satz in einer einzigen h1 —
+            Screenreader und Suchmaschinen lesen ihn zusammenhängend. */}
+        <h1 className="max-w-2xl text-4xl md:text-6xl font-bold tracking-tight leading-[1.08] text-balance">
+          <span className="text-gold">{heroContent.headlineAccent}</span>{' '}
+          <span className="text-white">{heroContent.headline}</span>
         </h1>
 
-        {/* Slogan als echter Text, nicht als Bild — SEO und Screenreader. */}
-        <p className="mt-4 text-xl md:text-2xl font-semibold text-gold max-w-2xl text-balance">
-          {heroContent.slogan}
-        </p>
+        <span aria-hidden="true" className="mt-8 block h-px w-16 bg-gold/70" />
 
-        <p className="mt-6 max-w-xl text-lg text-white/85 leading-relaxed">
+        <p className="mt-7 max-w-md text-base md:text-lg text-white/85 leading-relaxed">
           {heroContent.paragraph}
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4">
+        <div className="mt-9 flex flex-col sm:flex-row gap-4">
           <Link
             href={heroContent.primaryCta.href}
-            className="inline-flex items-center justify-center gap-2 bg-gold text-anthracite text-sm font-bold uppercase tracking-wider px-8 py-4 rounded-lg hover:bg-secondary-fixed transition-colors"
+            className="inline-flex items-center justify-center gap-2.5 bg-gold text-anthracite text-sm font-bold uppercase tracking-wider px-7 py-3.5 rounded-lg hover:bg-secondary-fixed transition-colors"
           >
             {heroContent.primaryCta.label}
+            <Arrow />
           </Link>
           <Link
             href={heroContent.secondaryCta.href}
-            className="inline-flex items-center justify-center border border-white/35 text-white text-sm font-bold uppercase tracking-wider px-8 py-4 rounded-lg hover:border-gold hover:text-gold transition-colors"
+            className="inline-flex items-center justify-center gap-2.5 border border-white/35 text-white text-sm font-bold uppercase tracking-wider px-7 py-3.5 rounded-lg hover:border-gold hover:text-gold transition-colors"
           >
             {heroContent.secondaryCta.label}
+            <Arrow />
           </Link>
-        </div>
-
-        {/* Standort und Telefon direkt im ersten Bildschirm — auf dem Handy
-            ist der Anruf die häufigste Handlung eines Autohaus-Besuchers. */}
-        <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 text-sm text-white/75">
-          <span className="inline-flex items-center gap-2">
-            <Icon name="location_on" className="text-lg text-gold" />
-            {company.street}, {company.postalCode} {company.city}
-          </span>
-          <a
-            href={company.phoneHref}
-            className="inline-flex items-center gap-2 font-semibold text-white hover:text-gold transition-colors"
-          >
-            <Icon name="call" className="text-lg text-gold" />
-            {company.phone}
-          </a>
         </div>
       </div>
     </section>

@@ -7,33 +7,32 @@ import type { AboutContent, ContactItem, HeroContent } from '@/lib/types'
  */
 
 export const heroContent: HeroContent = {
-  label: 'Automobilzentrum Wagenheld · Bruchsal',
-  headline: 'WAGENHELD',
-  // OFFEN (Ari): Der endgültige Slogan fehlt. Bis dahin steht hier die
-  // Formulierung aus der Kundenkarte #21 im Original-Wortlaut.
-  slogan: 'Erfahrung, auf die Sie sich verlassen können.',
+  // Wortlaut aus dem Kundenentwurf vom 17.08. Die Überschrift ist zweigeteilt,
+  // weil der Entwurf die erste Hälfte in Gold setzt — im DOM bleibt es ein
+  // zusammenhängender Satz in einer einzigen h1.
+  headlineAccent: 'Qualität ist kein Ziel –',
+  headline: 'sie ist unser Versprechen.',
   paragraph:
-    'Sorgfältig ausgewählte Gebrauchtwagen aus über 10 Jahren Erfahrung im Gebrauchtwagenhandel. Persönliche Beratung in Bruchsal, Zulassung im Raum Karlsruhe.',
+    'Sorgfältig ausgewählte Gebrauchtwagen. Persönliche Beratung. Über 10 Jahre Erfahrung im Automobilhandel.',
   primaryCta: { label: 'Fahrzeuge ansehen', href: '#fahrzeuge' },
   secondaryCta: { label: 'Fahrzeug verkaufen', href: '#ankauf' },
-  // OFFEN (Ari): Die drei Fotos vom 17.08. liegen als Trello-Karten #1–3.
-  // Sobald geklärt ist, ob das die Aufnahmen des Autozentrums sind, ersetzen
-  // sie dieses Bild.
-  imageUrl: '/images/hero.jpg',
+  imageUrl: '/images/Header_final.png',
   imageAlt:
-    'Fahrzeuge auf dem Gelände des Automobilzentrums Wagenheld in Bruchsal',
+    'Front einer dunklen Limousine vor schwarzem Hintergrund, beleuchtet vom eigenen Tagfahrlicht',
 }
 
 export const aboutContent: AboutContent = {
-  label: 'Über Wagenheld',
-  headline: 'Ein Gebrauchtwagenhandel, der aus Erfahrung auswählt.',
+  label: 'Über uns',
+  // Überschrift und beide Absätze im Kundenwortlaut vom 17.08.
+  headline: 'Erfahrung, auf die Sie sich verlassen können.',
   paragraphs: [
-    'Das Automobilzentrum Wagenheld ist ein Gebrauchtwagenhandel in Bruchsal. Dahinter stehen über zehn Jahre Erfahrung im Gebrauchtwagenhandel — und ein Bestand, den wir nicht nach Masse, sondern nach Zustand zusammenstellen.',
-    'Wir zeigen Ihnen die Wartungshistorie eines Fahrzeugs, nehmen Ihren Wagen zu einem fairen Preis in Zahlung und übernehmen die Zulassung im Raum Karlsruhe. Was wir nicht wissen, sagen wir Ihnen. Das ist der ganze Trick.',
+    'Hinter Wagenheld stehen über 10 Jahre Erfahrung in der Automobilbranche – insbesondere im An- und Verkauf von Fahrzeugen. Wir wissen, worauf es beim Fahrzeugkauf ankommt und legen Wert auf eine ehrliche, unkomplizierte Beratung auf Augenhöhe.',
+    'Unser Anspruch ist einfach: sorgfältig ausgewählte Fahrzeuge, transparente Angebote und ein Service, bei dem Sie sich von der ersten Besichtigung bis zur Übergabe gut aufgehoben fühlen.',
   ],
   ctaLabel: 'Kontakt aufnehmen',
-  imageUrl: '/images/about.jpg',
-  imageAlt: 'Verkaufsgespräch im Automobilzentrum Wagenheld',
+  imageUrl: '/images/ankauf.jpg',
+  imageAlt:
+    'Fahrzeugschlüssel auf einem Besprechungstisch im Automobilzentrum Wagenheld',
 }
 
 // OFFEN (Ari): Öffnungszeiten sind bislang nicht geliefert worden. Deshalb
@@ -66,5 +65,3 @@ export const contactItems: ContactItem[] = [
     external: true,
   },
 ]
-
-export const sellingImageUrl = '/images/ankauf.jpg'

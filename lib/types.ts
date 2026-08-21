@@ -2,9 +2,8 @@ export type SectionId =
   | 'header'
   | 'hero'
   | 'benefits'
-  | 'inventory'
+  | 'inventoryAndSelling'
   | 'reviews'
-  | 'vehicleSellingForm'
   | 'about'
   | 'contactBar'
   | 'footer'
@@ -77,10 +76,10 @@ export interface ContactItem {
 }
 
 export interface HeroContent {
-  label: string
+  /** Erster Teil der Überschrift, in Gold gesetzt. */
+  headlineAccent: string
+  /** Zweiter Teil, in Weiß. Beide zusammen ergeben einen Satz in einer h1. */
   headline: string
-  /** Kurzer Claim unter dem Firmennamen. Echter Text, nicht Teil des Bildes. */
-  slogan: string
   paragraph: string
   primaryCta: { label: string; href: string }
   secondaryCta: { label: string; href: string }
