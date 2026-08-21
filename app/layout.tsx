@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
 import { siteUrl, company } from '@/lib/site'
+import { MobileNav } from '@/components/sections/MobileNav'
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -69,9 +70,12 @@ export default function RootLayout({
           Zum Inhalt springen
         </a>
         {children}
+        <MobileNav />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+          }}
         />
       </body>
     </html>
