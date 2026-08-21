@@ -3,24 +3,27 @@ import { InventoryPanel } from '@/components/sections/Inventory'
 import { VehicleSellingForm } from '@/components/sections/VehicleSellingForm'
 
 /**
- * Fahrzeugbestand und Anfrageformular nebeneinander in einer dunklen Box auf
+ * Bestand und Anfrage als zwei Felder einer gemeinsamen dunklen Karte auf
  * hellem Grund.
  *
- * Die Box statt einer randlos dunklen Bahn: darunter folgt der helle
- * "Über uns"-Abschnitt, und ohne Rahmen entstand dort eine harte Kante
- * mitten im Scrollverlauf. Der helle Grund ringsum fängt den Wechsel ab,
- * statt ihn als Bruch zu zeigen.
+ * Die Karte statt einer randlos dunklen Bahn: darunter folgt der helle
+ * "Über uns"-Abschnitt, und ohne Rahmen entstand dort eine harte Kante mitten
+ * im Scrollverlauf.
  *
- * `on-dark` bleibt an der Box, damit der Fokusring darin die helle Variante
- * benutzt — auf dem dunklen Grund wäre der dunkle Ring unsichtbar.
+ * Die Spalten sind ungleich breit — das Formular braucht mehr Platz als der
+ * Verweis auf mobile.de, und zwei gleich breite Spalten ließen die linke leer
+ * auslaufen.
+ *
+ * `on-dark` bleibt an der Karte, damit der Fokusring darin die helle Variante
+ * benutzt; der dunkle Ring wäre auf dunklem Grund unsichtbar.
  */
 export function InventoryAndSelling() {
   return (
     <section className="bg-background">
       <Reveal className="max-w-[1280px] mx-auto px-5 md:px-10 py-16 md:py-24">
-        <div className="on-dark bg-anthracite rounded-lg px-6 py-12 md:px-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start">
-            <InventoryPanel />
+        <div className="on-dark grid grid-cols-1 overflow-hidden rounded-lg bg-anthracite lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]">
+          <InventoryPanel />
+          <div className="border-t border-white/10 px-6 py-10 md:px-10 md:py-12 lg:border-t-0 lg:border-l">
             <VehicleSellingForm />
           </div>
         </div>

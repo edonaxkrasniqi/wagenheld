@@ -9,8 +9,21 @@ import { company } from '@/lib/site'
 import type { FormIntent } from '@/lib/schemas'
 import type { FormState } from '@/lib/types'
 
+/**
+ * Felder auf dunklem Grund statt weißer Kästen: die weiße Füllung erschlug den
+ * ganzen Abschnitt, das Formular sah aus wie ein fremdes Element in der Karte.
+ *
+ * Die Werte sind nicht frei gewählt. Auf Anthrazit (#111719) muss die
+ * Feldbegrenzung nach WCAG 1.4.11 mindestens 3:1 erreichen — `white/15`
+ * kommt nur auf 1,6:1, `white/40` auf 3,98:1. Der Platzhalter liegt bei
+ * `white/50` auf 4,9:1. Wer diese Werte senkt, muss neu rechnen.
+ *
+ * Kein `outline-none` ohne Ersatz: die Rahmenfarbe allein ist kein
+ * Fokusindikator. Der Ring kommt aus der globalen :focus-visible-Regel, die
+ * `on-dark` auf die helle Variante umstellt.
+ */
 const inputClasses =
-  'w-full bg-surface-lowest border border-outline-variant rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-gold transition-colors'
+  'w-full bg-white/[0.06] border border-white/40 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/50 hover:border-white/60 focus:border-gold transition-colors'
 
 const labelClasses = 'block text-xs font-semibold uppercase tracking-wide text-white/80 mb-1.5'
 
@@ -49,10 +62,10 @@ export function VehicleSellingForm() {
       type="button"
       onClick={() => setIntent(value)}
       aria-pressed={intent === value}
-      className={`flex-1 rounded-lg px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+      className={`rounded-md px-3 py-2.5 text-[0.7rem] font-bold uppercase tracking-wider transition-colors ${
         intent === value
           ? 'bg-secondary-container text-on-secondary-container'
-          : 'border border-white/25 text-white/75 hover:border-gold hover:text-gold'
+          : 'text-white/70 hover:text-gold'
       }`}
     >
       {label}
@@ -61,18 +74,18 @@ export function VehicleSellingForm() {
 
   return (
     <div id="ankauf" className="scroll-mt-20">
-      <SectionLabel tone="onDark" className="mb-5">
+      <SectionLabel tone="onDark" className="mb-4">
         Anfrage senden
       </SectionLabel>
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4 text-balance">
+      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-3 text-balance">
         {text.headline}
       </h2>
-      <p className="text-white/80 mb-8">{text.lead}</p>
+      <p className="text-sm leading-relaxed text-white/75 mb-7">{text.lead}</p>
 
       <div
         role="group"
         aria-label="Art der Anfrage"
-        className="mb-8 flex flex-col sm:flex-row gap-3"
+        className="mb-7 grid grid-cols-2 gap-1 rounded-lg border border-white/20 p-1"
       >
         {toggle('sell', 'Ich möchte verkaufen')}
         {toggle('buy', 'Ich möchte kaufen')}
@@ -279,7 +292,7 @@ export function VehicleSellingForm() {
           type="submit"
           disabled={pending}
           variant="secondary"
-          className="sm:col-span-2 mt-2 disabled:opacity-60"
+          className="sm:col-span-2 mt-3 disabled:opacity-60"
         >
           {pending ? 'Wird gesendet…' : text.submit}
         </Button>

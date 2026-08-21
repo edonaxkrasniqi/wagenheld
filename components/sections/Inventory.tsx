@@ -4,50 +4,56 @@ import { Icon } from '@/components/ui/Icon'
 import { inventoryContent } from '@/content/inventory'
 
 /**
- * Nur der Inhalt, ohne eigenen Abschnitt: die Spalte sitzt zusammen mit dem
- * Ankauf-Formular in `InventoryAndSelling`. Verkaufen und Verkaufen-lassen
- * sind die beiden Wege, die ein Besucher hier gehen kann — sie nebeneinander
- * zu zeigen macht das sichtbar, untereinander liest es sich wie zwei
- * unabhängige Angebote.
+ * Die Bestand-Spalte als bildgetragenes Feld.
+ *
+ * Vorher stand das Foto lose unter dem Knopf und sah nach Lückenfüller aus.
+ * Als angeschnittener Hintergrund trägt es die Spalte und gibt ihr das
+ * Gewicht, das sie neben dem längeren Formular braucht.
+ *
+ * Der Verlauf ist unten deckend, weil der Text dort sitzt — die Aufnahme ist
+ * ohnehin dunkel, aber die Lesbarkeit soll nicht vom Motiv abhängen.
  */
 export function InventoryPanel() {
   return (
-    <div id="fahrzeuge" className="scroll-mt-20">
-      <Icon name="directions_car" className="text-gold text-4xl" />
-
-      <span className="mt-5 block text-xs font-bold uppercase tracking-[0.2em] text-gold">
-        {inventoryContent.label}
-      </span>
-
-      <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-white text-balance">
-        {inventoryContent.headline}
-      </h2>
-
-      <p className="mt-5 text-white/75 leading-relaxed">{inventoryContent.paragraph}</p>
-
-      <Link
-        href={inventoryContent.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-8 inline-flex items-center gap-2 bg-gold text-anthracite text-sm font-bold uppercase tracking-wider px-7 py-3.5 rounded-lg hover:bg-secondary-fixed transition-colors"
-      >
-        {inventoryContent.ctaLabel}
-        <Icon name="open_in_new" className="text-lg" />
-        <span className="sr-only">(öffnet in neuem Tab)</span>
-      </Link>
-
-      {/* Füllt die Spalte, die neben dem längeren Formular sonst leer ausläuft.
-          `aria-hidden` plus leerer Alt-Text: das Bild zeigt nichts, was der
-          Text nicht schon sagt — für Screenreader wäre es reines Rauschen. */}
+    <div
+      id="fahrzeuge"
+      className="relative flex min-h-[24rem] scroll-mt-20 flex-col justify-end overflow-hidden px-6 py-10 md:px-10 md:py-12"
+    >
       <Image
         src="/images/Innenansicht.png"
         alt=""
         aria-hidden="true"
-        width={1680}
-        height={933}
+        fill
         sizes="(max-width: 1024px) 100vw, 45vw"
-        className="mt-10 hidden lg:block w-full h-auto rounded-lg border border-white/10"
+        className="object-cover"
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-anthracite via-anthracite/92 to-anthracite/55" />
+
+      <div className="relative">
+        <span className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-gold">
+          <span aria-hidden="true" className="h-px w-7 bg-gold/60" />
+          {inventoryContent.label}
+        </span>
+
+        <h2 className="mt-4 text-2xl md:text-3xl font-bold tracking-tight text-white text-balance">
+          {inventoryContent.headline}
+        </h2>
+
+        <p className="mt-4 max-w-md text-sm leading-relaxed text-white/75">
+          {inventoryContent.paragraph}
+        </p>
+
+        <Link
+          href={inventoryContent.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-7 inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-anthracite transition-colors hover:bg-secondary-fixed"
+        >
+          {inventoryContent.ctaLabel}
+          <Icon name="open_in_new" className="text-base" />
+          <span className="sr-only">(öffnet in neuem Tab)</span>
+        </Link>
+      </div>
     </div>
   )
 }
