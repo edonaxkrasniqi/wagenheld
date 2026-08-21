@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Zwischenschritt der Kundenabfrage — enthält nur das Template plus eingebettetes Logo
+docs/kundenabfrage.html
+docs/_logo.b64

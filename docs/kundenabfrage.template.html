@@ -1,0 +1,469 @@
+<meta charset="utf-8">
+<title>Wagenheld — offene Angaben vor dem Livegang</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+
+  :root {
+    --ink: #18201f;
+    --ink-soft: #4d5654;
+    --anthracite: #111719;
+    --gold: #7d6746;
+    --gold-light: #b5a188;
+    --warm: #f3efe8;
+    --sand: #dccbb5;
+    --card: #fcfaf6;
+    --line: #ddd6cb;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.2pt;
+    line-height: 1.52;
+    color: var(--ink);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- Kopf ---------- */
+  .cover {
+    background: var(--anthracite);
+    color: #fff;
+    padding: 22mm 15mm 16mm;
+    margin: -16mm -15mm 10mm;
+  }
+  .cover img { height: 26mm; display: block; margin-bottom: 10mm; }
+  .cover .kicker {
+    font-size: 8pt; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 5mm;
+  }
+  .cover h1 { font-size: 22pt; line-height: 1.15; margin: 0 0 4mm; font-weight: 700; letter-spacing: -.01em; }
+  .cover p { margin: 0; color: rgba(255,255,255,.72); font-size: 10pt; max-width: 125mm; }
+  .cover .meta { margin-top: 8mm; font-size: 8.5pt; color: rgba(255,255,255,.55); }
+
+  /* ---------- Fließtext ---------- */
+  .intro { background: var(--warm); border-left: 3px solid var(--gold); padding: 6mm 7mm; margin-bottom: 10mm; }
+  .intro p { margin: 0 0 3mm; }
+  .intro p:last-child { margin-bottom: 0; }
+
+  h2 {
+    font-size: 12.5pt; margin: 11mm 0 1mm; padding-bottom: 2mm;
+    border-bottom: 1.5px solid var(--ink); font-weight: 700; letter-spacing: -.01em;
+  }
+  h2 .num { color: var(--gold); margin-right: 2.5mm; }
+  .section-note { font-size: 8.8pt; color: var(--ink-soft); margin: 0 0 5mm; }
+
+  /* ---------- Fragen ---------- */
+  .q { page-break-inside: avoid; border: 1px solid var(--line); border-radius: 3mm; padding: 5mm 6mm; margin-bottom: 4mm; background: var(--card); }
+  .q-head { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 1.5mm; }
+  .q-num { font-weight: 700; color: var(--gold); font-size: 9.5pt; min-width: 7mm; }
+  .q-title { font-weight: 700; font-size: 10.8pt; flex: 1; }
+  .tag {
+    font-size: 7pt; letter-spacing: .1em; text-transform: uppercase;
+    padding: 1mm 2.5mm; border-radius: 1.5mm; font-weight: 700; white-space: nowrap;
+  }
+  .tag-stop { background: #7a1f1a; color: #fff; }
+  .tag-soon { background: var(--sand); color: #4a3a22; }
+  .why { color: var(--ink-soft); font-size: 9.2pt; margin: 0 0 3mm; padding-left: 10mm; }
+  .why b { color: var(--ink); }
+  .answer { padding-left: 10mm; }
+  .answer .line { border-bottom: 1px dotted #b3ab9e; height: 6.5mm; }
+  .answer .line + .line { margin-top: 1mm; }
+  .opts { padding-left: 10mm; font-size: 9.4pt; }
+  .opts span { display: inline-block; margin-right: 7mm; }
+  .box { display: inline-block; width: 3.4mm; height: 3.4mm; border: 1.2px solid var(--ink); border-radius: .8mm; margin-right: 1.8mm; vertical-align: -.4mm; }
+
+  /* ---------- Abschluss ---------- */
+  .done { background: var(--warm); border-radius: 3mm; padding: 6mm 7mm; margin-top: 6mm; page-break-inside: avoid; }
+  .done h3 { margin: 0 0 3mm; font-size: 11pt; }
+  .done ul { margin: 0; padding-left: 5mm; column-count: 2; column-gap: 8mm; }
+  .done li { margin-bottom: 1.5mm; font-size: 9.4pt; }
+
+  .send { border: 2px solid var(--anthracite); border-radius: 3mm; padding: 6mm 7mm; margin-top: 8mm; page-break-inside: avoid; }
+  .send h3 { margin: 0 0 2mm; font-size: 11pt; }
+  .send p { margin: 0; font-size: 9.6pt; color: var(--ink-soft); }
+
+  .foot { margin-top: 9mm; padding-top: 4mm; border-top: 1px solid var(--line); font-size: 8pt; color: var(--ink-soft); }
+</style>
+
+<div class="cover">
+  <img src="data:image/png;base64,__LOGO__" alt="Automobilzentrum Wagenheld">
+  <div class="kicker">Website · vor dem Livegang</div>
+  <h1>Diese Angaben fehlen uns noch<br>von Ihnen</h1>
+  <p>
+    Die Website ist fertig gebaut. Damit sie online gehen kann, brauchen wir
+    einige Angaben, die nur Sie liefern können — vor allem für Impressum und
+    Datenschutzerklärung.
+  </p>
+  <div class="meta">Automobilzentrum Wagenheld GbR · Im Schollengarten 14 · 76646 Bruchsal · Stand: 21. August 2026</div>
+</div>
+
+<div class="intro">
+  <p>
+    <b>Warum wir fragen, statt selbst etwas einzutragen:</b> Wir haben bewusst
+    nichts erfunden. Wo eine Angabe fehlt, steht auf der Seite ein sichtbar
+    markierter Platzhalter statt eines Werts, der echt aussieht. Ein
+    unvollständiges Impressum ist abmahnfähig — ein falsches zusätzlich.
+  </p>
+  <p>
+    Die mit <span class="tag tag-stop">Pflicht</span> markierten Punkte
+    blockieren den Start. Die mit <span class="tag tag-soon">wichtig</span>
+    markierten sollten vor dem Livegang geklärt sein, verhindern ihn aber nicht.
+    Sie können direkt in dieses Dokument schreiben und es uns zurückschicken.
+  </p>
+</div>
+
+<h2><span class="num">1</span>Impressum</h2>
+<p class="section-note">
+  Ohne diese Angaben darf die Seite nicht öffentlich erreichbar sein.
+</p>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">1.1</span>
+    <span class="q-title">Vor- und Nachnamen aller vertretungsberechtigten Gesellschafter</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Bei einer GbR müssen die Gesellschafter <b>namentlich</b> im Impressum
+    stehen. Der Firmenname allein genügt nach § 5 DDG nicht. Bitte alle
+    nennen, die die Gesellschaft vertreten dürfen.
+  </p>
+  <div class="answer"><div class="line"></div><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">1.2</span>
+    <span class="q-title">Wer ist für den Inhalt der Website verantwortlich?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Eine Person genügt — Name und Anschrift wie im Impressum
+    (§ 18 Abs. 2 MStV).
+  </p>
+  <div class="answer"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">1.3</span>
+    <span class="q-title">Umsatzsteuer-Identifikationsnummer</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Falls vorhanden, gehört sie ins Impressum (§ 27a UStG). Falls nicht,
+    streichen wir den Abschnitt ersatzlos — bitte kurz bestätigen, damit dort
+    nichts leer stehen bleibt.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Vorhanden, und zwar:</span>
+    <span><span class="box"></span>Haben wir nicht</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">1.4</span>
+    <span class="q-title">Ist die GbR ins Gesellschaftsregister eingetragen?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Seit dem 01.01.2024 <b>kann</b> sich eine GbR freiwillig eintragen lassen
+    und heißt dann „eGbR". Nur dann gehören Registergericht und Nummer
+    (GsR …) ins Impressum. Eine GbR steht <b>nicht</b> im Handelsregister —
+    diesen Abschnitt haben wir bereits entfernt.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Nein, nicht eingetragen</span>
+    <span><span class="box"></span>Ja — Gericht und Nummer:</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">1.5</span>
+    <span class="q-title">Wie läuft die Finanzierung bei Ihnen ab?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Auf der Seite steht „Finanzierung individuell möglich". Wenn Sie
+    Finanzierungen <b>selbst vermitteln</b>, kann dafür eine Erlaubnis nach
+    § 34c GewO nötig sein — dann müssen Erlaubnis und zuständige
+    Aufsichtsbehörde zusätzlich ins Impressum. Wenn Sie Kunden nur an eine
+    Bank <b>weiterleiten</b>, entfällt das in der Regel. Bitte im Zweifel mit
+    Ihrer Kammer oder einem Anwalt klären — wir tragen ein, was Sie uns sagen.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Nur Weiterleitung an eine Bank</span>
+    <span><span class="box"></span>Wir vermitteln selbst</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<h2><span class="num">2</span>Datenschutzerklärung</h2>
+<p class="section-note">
+  Die Erklärung muss beschreiben, was tatsächlich passiert — nicht, was
+  üblich ist.
+</p>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">2.1</span>
+    <span class="q-title">Hosting-Anbieter mit vollem Namen und Anschrift</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Der Anbieter sieht beim Aufruf der Seite die IP-Adresse Ihrer Besucher und
+    muss deshalb namentlich genannt werden. Dazu braucht es einen
+    <b>Auftragsverarbeitungsvertrag</b> nach Art. 28 DSGVO — bei den großen
+    Anbietern ein Klick im Konto. Falls Sie uns die Wahl überlassen,
+    schlagen wir einen Anbieter vor.
+  </p>
+  <div class="answer"><div class="line"></div><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">2.2</span>
+    <span class="q-title">Wie lange dürfen wir Formularanfragen aufbewahren?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Unser Vorschlag: <b>6 Monate</b> nach Abschluss der Anfrage, danach
+    automatische Löschung. Steuerliche Aufbewahrungspflichten bleiben davon
+    unberührt. Bitte bestätigen oder eine andere Frist nennen.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>6 Monate sind in Ordnung</span>
+    <span><span class="box"></span>Stattdessen:</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<h2><span class="num">3</span>Domain</h2>
+<p class="section-note">
+  Damit während der Umstellung keine E-Mail verloren geht, brauchen wir den
+  aktuellen Stand.
+</p>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">3.1</span>
+    <span class="q-title">Wo ist automobilzentrum-wagenheld.de aktuell registriert?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Anbieter und Zugangsdaten. Für einen Umzug brauchen wir zusätzlich den
+    <b>Auth-Code</b> (auch „AuthInfo" oder „Transfer-Code"), den Sie beim
+    aktuellen Anbieter anfordern können.
+  </p>
+  <div class="answer"><div class="line"></div><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">3.2</span>
+    <span class="q-title">Laufen über diese Domain schon E-Mail-Postfächer?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Das ist der kritischste Punkt beim Umzug. Wenn wir die Einträge umstellen,
+    ohne die vorhandenen zu kennen, <b>kommt keine E-Mail mehr an</b>. Wir
+    sichern sie vorher und prüfen danach nach.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Ja, bei:</span>
+    <span><span class="box"></span>Nein</span>
+    <span><span class="box"></span>Weiß ich nicht</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">3.3</span>
+    <span class="q-title">Wann passt Ihnen die Umstellung?</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Eine Domainumstellung wirkt nicht sofort überall. Wir legen sie in eine
+    ruhige Zeit — idealerweise nicht Freitagnachmittag.
+  </p>
+  <div class="answer"><div class="line"></div></div>
+</div>
+
+<h2><span class="num">4</span>E-Mail und Formularanfragen</h2>
+<p class="section-note">
+  Die Anfragen aus dem Formular sollen zuverlässig bei Ihnen landen — nicht
+  im Spam.
+</p>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">4.1</span>
+    <span class="q-title">Gibt es das Postfach info@automobilzentrum-wagenheld.de bereits?</span>
+    <span class="tag tag-stop">Pflicht</span>
+  </div>
+  <p class="why">
+    Diese Adresse steht im Impressum, im Footer, in der Datenschutzerklärung
+    und ist Empfänger aller Formularanfragen. Sie <b>muss</b> existieren und
+    gelesen werden.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Ja, existiert</span>
+    <span><span class="box"></span>Muss noch angelegt werden</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">4.2</span>
+    <span class="q-title">Wer soll die Anfragen bekommen?</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Standard ist <b>info@automobilzentrum-wagenheld.de</b>. Wenn die Anfragen
+    woanders hin sollen oder mehrere Personen sie sehen müssen, sagen Sie uns
+    die Adressen.
+  </p>
+  <div class="answer"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">4.3</span>
+    <span class="q-title">Absenderadresse für die automatischen Mails</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Die Website verschickt die Anfragen selbst. Damit sie nicht im Spam
+    landen, braucht sie eine eigene Absenderadresse auf Ihrer Domain —
+    Vorschlag: <b>leads@automobilzentrum-wagenheld.de</b>. Das Postfach muss
+    nichts empfangen, die Adresse muss nur existieren dürfen. Die nötigen
+    Einträge (SPF, DKIM, DMARC) richten wir ein.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>leads@… ist in Ordnung</span>
+    <span><span class="box"></span>Lieber:</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<h2><span class="num">5</span>Inhalte</h2>
+<p class="section-note">
+  Angaben, die auf der Seite stehen sollen — oder die dort besser noch nicht
+  stehen sollten.
+</p>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">5.1</span>
+    <span class="q-title">Öffnungszeiten</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Bisher steht dazu <b>nichts</b> auf der Seite, weil wir nicht raten
+    wollten. Sobald die Zeiten da sind, erscheinen sie automatisch — auch bei
+    Google. „Nur nach Vereinbarung" ist eine gültige Antwort.
+  </p>
+  <div class="answer"><div class="line"></div><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">5.2</span>
+    <span class="q-title">Garantie: Wer gibt sie, was deckt sie, was kostet sie?</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Auf der Seite steht „Optional bis 36 Monate". Sobald mit einer Garantie
+    geworben wird, verlangt § 479 BGB, dass Inhalt und Bedingungen genannt
+    werden. Solange die fehlen, ist die Aussage angreifbar — wir würden sie
+    sonst auf „Garantieverlängerung auf Anfrage" kürzen.
+  </p>
+  <div class="answer"><div class="line"></div><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">5.3</span>
+    <span class="q-title">Gilt „Aktuelle Inspektion nach Herstellervorgabe" für jedes Fahrzeug?</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Der Satz ist eine Zusage an jeden Käufer. Er muss für <b>alle</b>
+    verkauften Fahrzeuge stimmen, sonst ist er angreifbar. Wenn es Ausnahmen
+    gibt, formulieren wir vorsichtiger.
+  </p>
+  <div class="opts">
+    <span><span class="box"></span>Ja, gilt immer</span>
+    <span><span class="box"></span>Es gibt Ausnahmen:</span>
+  </div>
+  <div class="answer" style="margin-top:2.5mm"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">5.4</span>
+    <span class="q-title">Google-Unternehmensprofil</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Auf der Seite stehen <b>keine</b> Kundenbewertungen. Die zuvor
+    vorhandenen waren frei erfunden; gefälschte Bewertungen sind
+    ausdrücklich verboten und abmahnfähig. Mit einem Link zu Ihrem echten
+    Google-Profil können wir echte Bewertungen einbinden.
+  </p>
+  <div class="answer"><div class="line"></div></div>
+</div>
+
+<div class="q">
+  <div class="q-head">
+    <span class="q-num">5.5</span>
+    <span class="q-title">Eigene Fotos vom Betrieb oder vom Team</span>
+    <span class="tag tag-soon">wichtig</span>
+  </div>
+  <p class="why">
+    Die Seite zeigt derzeit allgemeine Fahrzeugaufnahmen. Echte Bilder von
+    Ihrem Betrieb wirken deutlich glaubwürdiger. Bei Personenfotos brauchen
+    wir die Einwilligung der Abgebildeten.
+  </p>
+  <div class="answer"><div class="line"></div></div>
+</div>
+
+<div class="done">
+  <h3>Das übernehmen wir — dafür brauchen Sie nichts zu tun</h3>
+  <ul>
+    <li>Impressum und Datenschutzerklärung einpflegen</li>
+    <li>Hosting einrichten und HTTPS erzwingen</li>
+    <li>Domain umziehen, E-Mail vorher sichern</li>
+    <li>SPF, DKIM und DMARC einrichten</li>
+    <li>Formularversand aufsetzen und testen</li>
+    <li>Löschfrist technisch durchsetzen</li>
+    <li>Sitemap, robots.txt und Google-Daten</li>
+    <li>Barrierefreiheit und Ladezeit prüfen</li>
+  </ul>
+</div>
+
+<div class="send">
+  <h3>Zurück an uns</h3>
+  <p>
+    Sie können dieses Dokument ausgefüllt zurückschicken, die Punkte formlos
+    per E-Mail beantworten oder wir gehen sie gemeinsam am Telefon durch —
+    für die meisten Punkte reichen ein paar Minuten. Punkt 1.5 und die
+    Garantiebedingungen sollten Sie im Zweifel vorher rechtlich abklären
+    lassen.
+  </p>
+</div>
+
+<div class="foot">
+  Die rechtlichen Hinweise in diesem Dokument benennen bekannte Fallstricke
+  und sind keine Rechtsberatung. Impressum, Datenschutzerklärung und
+  Garantiebedingungen sollten vor dem Livegang geprüft werden.
+</div>
