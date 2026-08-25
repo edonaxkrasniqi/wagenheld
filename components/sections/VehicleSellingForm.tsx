@@ -4,6 +4,11 @@ import { useActionState, useId, useState } from 'react'
 import Link from 'next/link'
 import { submitSellingForm } from '@/lib/actions'
 import { company } from '@/lib/site'
+import {
+  otherVehicleMake,
+  vehicleMakeOptions,
+  type VehicleMakeOption,
+} from '@/content/vehicleMakes'
 import type { FormIntent } from '@/lib/schemas'
 import type { FormState } from '@/lib/types'
 
@@ -27,10 +32,42 @@ import type { FormState } from '@/lib/types'
 const inputClasses =
   'w-full min-h-[52px] bg-warm/60 border border-warm-ink/50 rounded-xl px-4 py-3.5 text-base text-warm-ink placeholder:text-warm-muted hover:border-warm-ink/70 focus:border-gold-ink transition-colors'
 
+/**
+ * Das Markenfeld ist ein natives <select>. Bewusst keine nachgebaute Combobox:
+ * ein <select> ist per Tastatur, mit Screenreader und mit dem Rad-Picker auf
+ * dem Telefon ohne eine Zeile JavaScript bedienbar — jeder Nachbau müsste
+ * Rollen, Fokusfalle und Tastensteuerung selbst mitbringen und wäre dabei
+ * bestenfalls gleich gut.
+ *
+ * `appearance-none` entfernt nur die Systemgrafik, nicht das Verhalten; der
+ * Pfeil daneben ist ein `aria-hidden`-SVG und liegt auf `pointer-events-none`,
+ * damit ein Klick darauf weiterhin die Liste öffnet. `pr-11` hält den Text
+ * vom Pfeil frei.
+ */
+const selectClasses = `${inputClasses} appearance-none cursor-pointer pr-11`
+
 const labelClasses =
   'block text-sm font-bold uppercase tracking-wide text-warm-muted mb-2'
 
 const initialState: FormState = null
+
+/** Pfeil des Markenfelds. Rein dekorativ — die Ansage macht das <select>. */
+function SelectChevron() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-warm-muted"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  )
+}
 
 /**
  * Der Text ändert sich mit der Anfrageart, damit die Überschrift nicht dem
@@ -52,9 +89,13 @@ const copy: Record<FormIntent, { headline: string; lead: string; submit: string 
 export function VehicleSellingForm() {
   const [state, formAction, pending] = useActionState(submitSellingForm, initialState)
   const [intent, setIntent] = useState<FormIntent>('sell')
+  // Leerer Startwert, damit die Auswahl eine bewusste Entscheidung bleibt und
+  // `required` greift. Der Zustand steuert nur, ob das Freitextfeld erscheint.
+  const [make, setMake] = useState<VehicleMakeOption | ''>('')
   const id = useId()
 
   const text = copy[intent]
+  const needsOtherMake = make === otherVehicleMake
 
   // Umschalter als zwei Knöpfe mit `aria-pressed`, nicht als Reiter-Muster:
   // ein halb umgesetztes Tab-Muster (ohne Pfeiltasten-Navigation und
@@ -110,18 +151,62 @@ export function VehicleSellingForm() {
 
         {intent === 'sell' ? (
           <>
+            {/*
+              Auswahl und Freitext stehen zusammen in einer Rasterzelle. Ein
+              eigenes Feld daneben hätte das Zwei-Spalten-Raster bei jedem
+              Einblenden umgeworfen und weiter unten eine halbe Zelle leer
+              gelassen; so bleibt die Anordnung in beiden Zuständen dieselbe.
+            */}
             <div>
               <label htmlFor={`${id}-make`} className={labelClasses}>
                 Marke
               </label>
-              <input
-                id={`${id}-make`}
-                name="make"
-                required
-                autoComplete="off"
-                placeholder="z. B. Volkswagen"
-                className={inputClasses}
-              />
+              <div className="relative">
+                <select
+                  id={`${id}-make`}
+                  name="make"
+                  required
+                  value={make}
+                  onChange={(event) =>
+                    setMake(event.target.value as VehicleMakeOption | '')
+                  }
+                  className={selectClasses}
+                >
+                  {/* `value=""` plus `required` lässt das Formular nicht
+                      abschicken, solange nichts gewählt wurde. */}
+                  <option value="" disabled>
+                    Bitte auswählen
+                  </option>
+                  {vehicleMakeOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <SelectChevron />
+              </div>
+
+              {/*
+                Nur im Bedarfsfall im DOM — und damit auch nur dann im
+                abgeschickten FormData. Der Server prüft dieselbe Bedingung
+                noch einmal, das Ausblenden allein ist keine Validierung.
+              */}
+              {needsOtherMake && (
+                <div className="mt-4">
+                  <label htmlFor={`${id}-make-other`} className={labelClasses}>
+                    Marke angeben
+                  </label>
+                  <input
+                    id={`${id}-make-other`}
+                    name="makeOther"
+                    required
+                    maxLength={60}
+                    autoComplete="off"
+                    placeholder="z. B. Alfa Romeo"
+                    className={inputClasses}
+                  />
+                </div>
+              )}
             </div>
 
             <div>

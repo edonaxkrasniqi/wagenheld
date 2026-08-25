@@ -7,11 +7,17 @@ import type { AboutContent, ContactItem, HeroContent } from '@/lib/types'
  */
 
 export const heroContent: HeroContent = {
-  // Wortlaut aus dem Kundenentwurf vom 17.08. Die Überschrift ist zweigeteilt,
-  // weil der Entwurf die erste Hälfte in Gold setzt — im DOM bleibt es ein
-  // zusammenhängender Satz in einer einzigen h1.
-  headlineAccent: 'Qualität ist kein Ziel –',
-  headline: 'sie ist unser Versprechen.',
+  // Kundenwortlaut (Änderungswunsch): „Qualität ist kein Ziel – es ist ein
+  // Versprechen.“ Die Überschrift ist zweigeteilt, weil der Entwurf die erste
+  // Hälfte in Gold setzt — im DOM bleibt es ein zusammenhängender Satz in
+  // einer einzigen h1.
+  //
+  // Der Gedankenstrich hängt per geschütztem Leerzeichen (\u00A0) an
+  // „Ziel“: sonst kann er auf schmalen Telefonen als erstes Zeichen einer
+  // neuen Zeile landen. So bricht der Satz nur dort um, wo er auch inhaltlich
+  // zerfällt — zwischen den beiden Halbsätzen.
+  headlineAccent: 'Qualität ist kein Ziel\u00A0–',
+  headline: 'es ist ein Versprechen.',
   paragraph:
     'Sorgfältig ausgewählte Gebrauchtwagen. Persönliche Beratung. Über 10 Jahre Erfahrung im Automobilhandel.',
   primaryCta: { label: 'Fahrzeuge ansehen', href: '#fahrzeuge' },

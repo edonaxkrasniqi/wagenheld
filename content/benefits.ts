@@ -1,4 +1,5 @@
 import type { Benefit } from '@/lib/types'
+import { company } from '@/lib/site'
 
 /**
  * WICHTIG: public/fonts/material-symbols-outlined.woff2 ist ein Subset. Es
@@ -47,7 +48,16 @@ export const benefits: Benefit[] = [
   {
     icon: 'payments',
     headline: 'Finanzierung',
-    description: 'Individuell möglich',
+    // Kachelüberschrift und Beschreibung ergeben zusammen den vom Kunden
+    // vorgegebenen Satz: „Finanzierung über unsere Partnerbank Bank11
+    // möglich." Das frühere „Individuell möglich" war inhaltsleer und ließ
+    // offen, wer eigentlich finanziert.
+    //
+    // Mehr steht hier bewusst nicht: Wagenheld ist weder Bank noch eigener
+    // Kreditgeber. Aussagen über eine eigene Vermittlungserlaubnis, eine
+    // Aufsichtsbehörde oder § 34c GewO sind nicht belegt und gehören deshalb
+    // nicht auf die Seite. Konkrete Zinssätze ebenfalls nicht — § 6a PAngV.
+    description: `Über unsere Partnerbank ${company.financePartnerBank} möglich`,
   },
   {
     icon: 'gavel',

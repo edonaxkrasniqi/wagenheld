@@ -34,9 +34,16 @@ export function InventoryPanel() {
           {inventoryContent.headline}
         </h3>
 
-        <p className="mt-4 mb-8 leading-relaxed text-warm-muted">
-          {inventoryContent.paragraph}
-        </p>
+        {/* Der Abstand sitzt am Container, nicht an jedem Absatz: `space-y-4`
+            trennt die Absätze gleichmäßig, `mb-8` hält den Abstand zum Knopf.
+            Ein `mt`/`mb` je Absatz würde beim zweiten Absatz doppelt zählen. */}
+        <div className="mt-4 mb-8 space-y-4 leading-relaxed text-warm-muted">
+          {inventoryContent.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="text-pretty">
+              {paragraph}
+            </p>
+          ))}
+        </div>
 
         {/* `mt-auto` schiebt den Knopf an die Unterkante, damit er auf einer
             Linie mit dem Absendeknopf der Nachbarkarte sitzt. */}

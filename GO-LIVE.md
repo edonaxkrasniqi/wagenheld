@@ -1,6 +1,6 @@
 # Go-Live-Checkliste
 
-Was vor dem Schalten der Seite erledigt sein muss. Stand: 21.08.2026.
+Was vor dem Schalten der Seite erledigt sein muss. Stand: 25.08.2026.
 
 Die Liste hat drei Teile: **A** sind Angaben, die nur vom Kunden kommen können —
 ohne sie darf die Seite nicht online. **B** ist Infrastruktur (Domain, E-Mail,
@@ -14,34 +14,42 @@ Hosting). **C** ist Arbeit am Code, die noch offen ist.
 
 ## A · Angaben, die vom Kunden kommen müssen
 
-Jede dieser Zeilen steht aktuell als markierter Platzhalter auf der Seite. Sie
-sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
+Was hier noch offen ist, steht als markierter Platzhalter auf der Seite. Diese
+Platzhalter sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 
 ### A1 · Blockiert den Livegang
-
-- [ ] **Vor- und Nachnamen aller vertretungsberechtigten Gesellschafter**
-      Eine GbR muss ihre Gesellschafter nennen; der Firmenname allein genügt
-      nach § 5 DDG nicht. → `app/impressum/page.tsx`
-
-- [ ] **Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV**
-      Name eines Gesellschafters, Anschrift wie im Impressum.
-      → `app/impressum/page.tsx`
-
-- [ ] **USt-IdNr.** — oder die ausdrückliche Auskunft, dass keine existiert.
-      Liegt keine vor, wird der Abschnitt **ersatzlos gestrichen**, nicht leer
-      gelassen. → `app/impressum/page.tsx`
-
-- [ ] **Ist die GbR als eGbR im Gesellschaftsregister eingetragen?**
-      Wenn ja: Registergericht und Nummer (GsR …). Wenn nein: Abschnitt
-      streichen. Eine GbR steht **nicht** im Handelsregister — der Abschnitt
-      dazu wurde bereits entfernt. → `app/impressum/page.tsx`
 
 - [ ] **Hosting-Anbieter mit vollem Namen und Anschrift**, plus abgeschlossener
       Auftragsverarbeitungsvertrag nach Art. 28 DSGVO. Hängt an B3.
       → `app/datenschutz/page.tsx`
 
-- [ ] **Löschfrist für Formularanfragen bestätigen.** Vorschlag: 6 Monate.
-      → `app/datenschutz/page.tsx`
+### A1-erledigt · Vom Kunden geliefert und eingebaut
+
+Die Angaben stehen jetzt in `lib/site.ts` und werden von dort aus in Impressum,
+Datenschutzerklärung und Footer gelesen. Wer sie ändert, ändert sie dort — nicht
+in den Seiten.
+
+- [x] **Vertretungsberechtigter Gesellschafter:** Arianit Krasniqi.
+      → `lib/site.ts`, ausgegeben in `app/impressum/page.tsx`
+
+- [x] **Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:** Arianit
+      Krasniqi, Anschrift wie im Impressum. → `app/impressum/page.tsx`
+
+- [x] **USt-IdNr.:** DE462951299 (§ 27a UStG, exakt ohne Leerzeichen).
+      → `lib/site.ts`
+
+- [x] **Gesellschaftsregister:** Die GbR ist **nicht** eingetragen. Der
+      Abschnitt wurde ersatzlos gestrichen und darf nicht zurückkehren.
+
+- [x] **Löschfrist für Formularanfragen:** sechs Monate nach Abschluss der
+      Bearbeitung. Steht als Zusage in `app/datenschutz/page.tsx`. **Technisch
+      nicht erzwingbar** — das Formular speichert nichts, es versendet nur eine
+      E-Mail. Die Einhaltung im Postfach ist eine organisatorische Aufgabe,
+      siehe B2.
+
+- [x] **Finanzierung:** läuft über die Partnerbank Bank11. Mehr steht nicht auf
+      der Seite und darf auch nicht dazukommen — siehe „Ausdrücklich nicht
+      umsetzen". → `content/benefits.ts`
 
 ### A2 · Sollte vor dem Livegang geklärt sein
 
@@ -71,7 +79,13 @@ sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 ### B1 · Domain
 
 - [ ] **Aktueller Registrar und Auth-Code** für `automobilzentrum-wagenheld.de`
-      besorgen.
+      besorgen. Der Auth-Code wird beim bisherigen Anbieter angefordert und
+      direkt beim neuen Registrar eingegeben.
+
+      > Der Auth-Code gehört **nirgendwo** in dieses Repository: nicht in den
+      > Quellcode, nicht in eine eingecheckte `.env`, nicht ins Frontend, nicht
+      > in diese Datei. Er ist das Passwort zur Domain — wer ihn hat, kann sie
+      > übernehmen. Weitergabe nur über einen vertraulichen Kanal.
 - [ ] **MX-Einträge vor dem Umzug sichern.** Die E-Mail-Zustellung an
       `info@automobilzentrum-wagenheld.de` darf während der Umstellung **nicht**
       ausfallen.
@@ -98,7 +112,18 @@ sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 - [ ] **Auftragsverarbeitungsvertrag mit Resend** abschließen. Der Dienst steht
       bereits namentlich in der Datenschutzerklärung.
 - [ ] **Testanfrage abschicken und den Eingang dokumentieren** — beide
-      Anfragearten, Kauf und Verkauf.
+      Anfragearten, Kauf und Verkauf. Beim Verkauf zusätzlich einmal mit
+      „Sonstige Marke": in der E-Mail muss die frei eingetragene Marke stehen,
+      nicht der Auswahlwert.
+
+- [ ] **Löschroutine für das Postfach festlegen und dokumentieren.**
+      Die Datenschutzerklärung sagt zu, dass Anfragen spätestens **sechs
+      Monate** nach Abschluss der Bearbeitung gelöscht werden. Die Website
+      speichert nichts, also greift die Frist ausschließlich im Postfach
+      `info@automobilzentrum-wagenheld.de` — inklusive Ordner „Gesendet",
+      Archiv und Papierkorb. Nötig ist eine feste Zuständigkeit und ein
+      wiederkehrender Termin (z. B. quartalsweise). Ohne das steht die Zusage
+      in der Erklärung ohne Deckung da.
 
 > Ohne `RESEND_API_KEY` gehen Anfragen **nicht** verloren, sondern das Formular
 > meldet dem Absender ehrlich, dass die Übermittlung fehlgeschlagen ist, und
@@ -151,6 +176,8 @@ sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 
 ## D · Abnahme unmittelbar vor dem Schalten
 
+- [ ] `npm run lint`, `npm run typecheck`, `npm test` und `npm run build` laufen
+      durch
 - [ ] Impressum vollständig, vom Kunden **schriftlich** bestätigt
 - [ ] Datenschutzerklärung vollständig, Hosting-Anbieter eingetragen
 - [ ] **Inkognito-Test:** Netzwerk-Tab zeigt beim ersten Seitenaufruf **keine**
@@ -181,6 +208,10 @@ wenn es die Seite überzeugender machen würde.
 | „Zulassung deutschlandweit" | Kundenangabe ist „Raum Karlsruhe" |
 | § 5 TMG im Impressum | ersetzt durch § 5 DDG |
 | Handelsregister-Abschnitt | eine GbR steht dort nicht drin |
+| Gesellschaftsregister-Abschnitt | diese GbR ist nicht eingetragen (Kundenauskunft) |
+| Wagenheld als Bank, Kreditgeber oder Vermittler | Finanzierungen laufen über Bank11; alles Weitere ist unbelegt |
+| Erlaubnis nach § 34c GewO, Aufsichtsbehörde, Vermittlerregister | vom Kunden nicht bestätigt — nicht erfinden |
+| Niklas und der Grund seiner fehlenden Vertretungsberechtigung | gehört nicht auf eine öffentliche Website |
 | Link zur OS-Plattform | Plattform seit 20.07.2025 abgeschaltet |
 | Fahrzeugschein-Upload | personenbezogene Daten; braucht eigenes Konzept |
 | „15 Jahre Erfahrung" | Kundenangabe ist „über 10 Jahre" |

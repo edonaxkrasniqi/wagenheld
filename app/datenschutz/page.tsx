@@ -55,7 +55,8 @@ export default function DatenschutzPage() {
                 </a>
               </address>
               <p className="mt-2 text-sm">
-                Vertretungsberechtigte Gesellschafter: siehe{' '}
+                Vertretungsberechtigter Gesellschafter:{' '}
+                {company.representative}. Weitere Angaben im{' '}
                 <Link href="/impressum" className="underline hover:text-gold-ink">
                   Impressum
                 </Link>
@@ -131,11 +132,16 @@ export default function DatenschutzPage() {
                 Verbindung mit dem EU-US Data Privacy Framework.
               </p>
               <p className="mt-2">
-                Ihre Daten werden nicht an sonstige Dritte weitergegeben und
-                spätestens{' '}
-                <Offen>Löschfrist festlegen, z. B. 6 Monate</Offen> nach
-                Abschluss der Anfragebearbeitung gelöscht, soweit keine
-                gesetzlichen Aufbewahrungspflichten entgegenstehen.
+                Ihre Anfrage wird ausschließlich als E-Mail an unser Postfach
+                zugestellt. Eine Speicherung in einer Datenbank oder einem
+                sonstigen dauerhaften Speicher auf dieser Website findet nicht
+                statt.
+              </p>
+              <p className="mt-2">
+                Ihre Daten werden nicht an sonstige Dritte weitergegeben. Die
+                Daten werden spätestens sechs Monate nach Abschluss der
+                Anfragebearbeitung gelöscht, soweit keine gesetzlichen
+                Aufbewahrungspflichten entgegenstehen.
               </p>
               <p className="mt-2">
                 Über das Formular werden bewusst keine Dateien entgegengenommen.
