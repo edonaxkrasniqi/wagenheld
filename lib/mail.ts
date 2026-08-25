@@ -7,6 +7,18 @@ import { company } from '@/lib/site'
  *
  * Die Formulardaten stehen bewusst nicht im Fehler-Log: das sind
  * personenbezogene Daten, und Server-Logs sind kein Ablageort dafür.
+ *
+ * LÖSCHFRIST — bitte beim Ändern beachten: Anfragen werden hier nur versendet,
+ * nicht gespeichert. Es gibt keine Datenbank, keine Datei und keinen Cache, in
+ * dem sie liegen bleiben. Die in der Datenschutzerklärung zugesagte Frist von
+ * sechs Monaten kann deshalb technisch gar nicht hier durchgesetzt werden; sie
+ * gilt für das Postfach `info@…` und muss dort organisatorisch eingehalten
+ * werden (siehe GO-LIVE.md, Abschnitt B2).
+ *
+ * Wer hier später eine Persistenz ergänzt — eine Datenbank, ein Ticketsystem,
+ * ein Log mit Inhalt —, muss zugleich eine automatische Löschung nach
+ * spätestens sechs Monaten mitliefern. Sonst steht die Zusage in der
+ * Datenschutzerklärung ohne Deckung da.
  */
 async function send(subject: string, replyTo: string, lines: string[]): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY

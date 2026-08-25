@@ -10,19 +10,13 @@ export const metadata: Metadata = {
 }
 
 /**
- * Offene Punkte, die nur der Kunde beantworten kann, bleiben sichtbar
- * markiert. Ein Impressum mit erfundenen Angaben ist schlimmer als eines
- * mit sichtbaren Lücken: unvollständige Angaben sind nach § 5 DDG
- * abmahnfähig, falsche zusätzlich nach § 5 UWG.
+ * Alle Pflichtangaben liegen inzwischen vom Kunden vor; die früheren
+ * OFFEN-Markierungen sind deshalb ersatzlos entfallen. Die Werte kommen aus
+ * `lib/site.ts`, damit Impressum, Datenschutzerklärung und Footer nicht
+ * auseinanderlaufen. Erfundene Angaben sind nach § 5 UWG angreifbar,
+ * unvollständige nach § 5 DDG — beides bleibt der Maßstab, falls hier je
+ * wieder etwas ergänzt wird.
  */
-function Offen({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded text-sm font-semibold">
-      {children}
-    </span>
-  )
-}
-
 export default function ImpressumPage() {
   return (
     <div className="flex flex-col flex-1">
@@ -49,18 +43,9 @@ export default function ImpressumPage() {
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                Vertreten durch die Gesellschafter
+                Vertretungsberechtigter Gesellschafter
               </h2>
-              <p>
-                <Offen>
-                  Vor- und Nachnamen aller vertretungsberechtigten Gesellschafter
-                </Offen>
-              </p>
-              <p className="mt-2 text-sm">
-                Bei einer Gesellschaft bürgerlichen Rechts müssen die
-                vertretungsberechtigten Gesellschafter namentlich genannt werden.
-                Der Firmenname allein genügt nicht.
-              </p>
+              <p>{company.representative}</p>
             </section>
 
             <section>
@@ -81,34 +66,20 @@ export default function ImpressumPage() {
               </p>
             </section>
 
-            <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">
-                Gesellschaftsregister
-              </h2>
-              <p>
-                <Offen>
-                  Nur ausfüllen, falls die GbR als eGbR eingetragen ist —
-                  Registergericht und Registernummer (GsR …)
-                </Offen>
-              </p>
-              {/*
-                Hier stand vorher ein Handelsregister-Abschnitt. Eine GbR steht
-                nicht im Handelsregister. Seit dem 01.01.2024 kann sie sich
-                freiwillig ins Gesellschaftsregister eintragen lassen (dann
-                "eGbR", Registernummer GsR …). Ist sie das nicht, gehört dieser
-                ganze Abschnitt ersatzlos gestrichen.
-              */}
-            </section>
+            {/*
+              Kein Register-Abschnitt. Eine GbR steht nicht im
+              Handelsregister; ins Gesellschaftsregister ist diese hier nach
+              Auskunft des Kunden nicht eingetragen. Ein leerer oder
+              erklärender Abschnitt wäre schlechter als keiner — bitte nicht
+              „der Vollständigkeit halber" wieder aufnehmen.
+            */}
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
                 Umsatzsteuer-Identifikationsnummer
               </h2>
               <p>
-                <Offen>
-                  USt-IdNr. gemäß § 27a UStG, falls vorhanden — sonst diesen
-                  Abschnitt ersatzlos streichen
-                </Offen>
+                USt-IdNr. gemäß § 27a UStG: {company.vatId}
               </p>
             </section>
 
@@ -116,9 +87,13 @@ export default function ImpressumPage() {
               <h2 className="text-lg font-bold text-on-surface mb-2">
                 Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
               </h2>
-              <p>
-                <Offen>Name eines Gesellschafters, Anschrift wie oben</Offen>
-              </p>
+              <address className="not-italic">
+                {company.representative}
+                <br />
+                {company.street}
+                <br />
+                {company.postalCode} {company.city}
+              </address>
             </section>
 
             <section>

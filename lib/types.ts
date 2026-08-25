@@ -37,7 +37,12 @@ export interface Benefit {
 export interface InventoryContent {
   label: string
   headline: string
-  paragraph: string
+  /**
+   * Ein Eintrag je Absatz. Bewusst ein Array und kein Fließtext mit `\n`:
+   * so entsteht je Absatz ein eigenes <p>, und der Abstand dazwischen kommt
+   * aus dem Designsystem statt aus einem Zeilenumbruch im Text.
+   */
+  paragraphs: string[]
   ctaLabel: string
   url: string
 }

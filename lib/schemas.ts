@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { otherVehicleMake, vehicleMakeOptions } from '@/content/vehicleMakes'
 
 /**
  * Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO. Ohne aktives Häkchen wird die
@@ -28,21 +29,65 @@ const firstRegistrationSchema = z
     )
   }, 'Bitte ein gültiges Datum angeben, das nicht in der Zukunft liegt')
 
-/** Wer ein Fahrzeug anbietet, liefert die Eckdaten mit. */
-export const sellingFormSchema = z.object({
-  make: z.string().min(1, 'Marke ist erforderlich'),
-  model: z.string().min(1, 'Modell ist erforderlich'),
-  firstRegistration: firstRegistrationSchema,
-  mileage: z.coerce
-    .number({ error: 'Kilometerstand muss eine Zahl sein' })
-    .int()
-    .positive('Kilometerstand muss positiv sein')
-    .max(2_000_000, 'Bitte den Kilometerstand prüfen'),
-  name: z.string().min(2, 'Name ist erforderlich'),
-  email: z.string().email('Ungültige E-Mail-Adresse'),
-  phone: z.string().max(40).optional(),
-  consent: consentSchema,
+/**
+ * Die Marke kommt aus einem Dropdown, deshalb `z.enum` statt Freitext: der
+ * Server akzeptiert genau die Werte, die das Formular anbietet. Ein
+ * manipuliertes Feld fällt damit durch, statt ungeprüft in die E-Mail zu
+ * wandern.
+ */
+const makeSchema = z.enum(vehicleMakeOptions, {
+  error: 'Bitte wählen Sie eine Marke aus',
 })
+
+/**
+ * Freitext-Marke. Nur ausgefüllt, wenn im Dropdown „Sonstige Marke" steht —
+ * das Formular blendet das Feld sonst gar nicht erst ein, also darf es hier
+ * fehlen dürfen. Ob es fehlen *darf*, entscheidet die Prüfung unten.
+ */
+const otherMakeSchema = z
+  .string()
+  .trim()
+  .max(60, 'Bitte die Marke etwas kürzer angeben')
+  .optional()
+
+/** Wer ein Fahrzeug anbietet, liefert die Eckdaten mit. */
+export const sellingFormSchema = z
+  .object({
+    make: makeSchema,
+    makeOther: otherMakeSchema,
+    model: z.string().min(1, 'Modell ist erforderlich'),
+    firstRegistration: firstRegistrationSchema,
+    mileage: z.coerce
+      .number({ error: 'Kilometerstand muss eine Zahl sein' })
+      .int()
+      .positive('Kilometerstand muss positiv sein')
+      .max(2_000_000, 'Bitte den Kilometerstand prüfen'),
+    name: z.string().min(2, 'Name ist erforderlich'),
+    email: z.string().email('Ungültige E-Mail-Adresse'),
+    phone: z.string().max(40).optional(),
+    consent: consentSchema,
+  })
+  .superRefine((data, ctx) => {
+    if (data.make !== otherVehicleMake) return
+
+    if (!data.makeOther) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['makeOther'],
+        message: 'Bitte geben Sie die Marke an',
+      })
+    }
+  })
+  /*
+    Nach außen bleibt es bei einem einzigen Feld `make`. „Sonstige Marke" ist
+    ein Auswahlwert, keine Marke — er wird hier durch die frei eingetragene
+    ersetzt und taucht deshalb weder in der E-Mail noch in der Bestätigung auf.
+    Das hält lib/mail.ts unverändert kompatibel.
+  */
+  .transform(({ makeOther, ...rest }) => ({
+    ...rest,
+    make: rest.make === otherVehicleMake && makeOther ? makeOther : rest.make,
+  }))
 
 /**
  * Wer ein Fahrzeug sucht, soll möglichst wenig ausfüllen müssen.
