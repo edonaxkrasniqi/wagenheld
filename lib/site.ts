@@ -34,3 +34,47 @@ export const company = {
    */
   financePartnerBank: 'Bank11',
 } as const
+
+/**
+ * Stand der Datenschutzerklärung. Bei jeder inhaltlichen Änderung mit
+ * hochziehen — die Angabe ist Teil der Informationspflicht nach Art. 13 DSGVO
+ * und eine veraltete ist schlechter als gar keine.
+ */
+export const privacyPolicyDate = '26. August 2026'
+
+/**
+ * Auftragsverarbeiter und sonstige Dritte, die auf dieser Seite tatsächlich
+ * Daten verarbeiten. Wer hier steht, muss im Code vorkommen — und wer im Code
+ * vorkommt, muss hier stehen. Das ist der Abgleich aus der Go-Live-Checkliste,
+ * Abschnitt D.
+ *
+ * Firmierungen und Anschriften bitte nicht aus dem Gedächtnis pflegen, sondern
+ * aus dem jeweiligen Impressum bzw. AV-Vertrag übernehmen.
+ */
+export const processors = {
+  /** Hosting und Auslieferung der Seite (Cloudflare Workers). */
+  hosting: {
+    name: 'Cloudflare, Inc.',
+    address: '101 Townsend Street, San Francisco, CA 94107, USA',
+  },
+  /** Versandweg der Formularanfragen. Resend ist die Marke, nicht die Firma. */
+  mailDelivery: {
+    name: 'Plus Five Five, Inc.',
+    brand: 'Resend',
+    address: '2261 Market Street #5039, San Francisco, CA 94114, USA',
+  },
+  /** Postfach, in dem die Anfragen ankommen und liegen bleiben. */
+  mailbox: {
+    name: 'IONOS SE',
+    address: 'Elgendorfer Straße 57, 56410 Montabaur, Deutschland',
+  },
+} as const
+
+/**
+ * Zuständige Aufsichtsbehörde. Anschrift seit dem 22.12.2025 geändert — die
+ * frühere Lautenschlagerstraße 20 ist überholt.
+ */
+export const supervisoryAuthority = {
+  name: 'Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg',
+  address: 'Heilbronner Straße 35, 70191 Stuttgart',
+} as const

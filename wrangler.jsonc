@@ -1,0 +1,34 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"main": ".open-next/worker.js",
+	"name": "wagenheld",
+	"compatibility_date": "2026-08-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	// Bildoptimierung für next/image. Auf Workers gibt es kein `sharp` — die
+	// Umrechnung nach AVIF/WebP übernimmt diese Bindung. Ohne sie würde das
+	// Hero-PNG unverkleinert ausgeliefert (siehe GO-LIVE.md, Abschnitt C).
+	"images": {
+		"binding": "IMAGES"
+	},
+	// Zur Laufzeit gelesen von lib/mail.ts. Keine Geheimnisse — die dürfen hier
+	// stehen und ins Repository.
+	//
+	// Der API-Schlüssel gehört NICHT hierher, sondern als Secret in den Worker:
+	//     npx wrangler secret put RESEND_API_KEY
+	//
+	// NEXT_PUBLIC_SITE_URL fehlt hier ebenfalls mit Absicht: Der Wert wird zur
+	// Buildzeit in Sitemap, robots.txt, Canonicals und Open-Graph-URLs
+	// eingebacken. Er muss also beim `npm run deploy` in der Umgebung stehen
+	// (`.env.local` oder Build-Variable), nicht erst im laufenden Worker.
+	"vars": {
+		"LEAD_FROM_EMAIL": "Automobilzentrum Wagenheld <leads@send.automobilzentrum-wagenheld.de>",
+		"LEAD_TO_EMAIL": "info@automobilzentrum-wagenheld.de"
+	}
+	// Bewusst KEIN R2-Cache und keine Self-Reference: die Seite hat weder ISR
+	// noch `use cache`. Wer später eine Seite mit `revalidate` ergänzt, muss
+	// beides nach https://opennext.js.org/cloudflare/caching nachrüsten.
+}

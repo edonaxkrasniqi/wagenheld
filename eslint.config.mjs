@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Build-Ausgabe des Cloudflare-Adapters. Ohne diese Zeilen linted
+    // `npm run lint` den gebündelten Worker mit und meldet über 12.000
+    // Probleme in fremdem Code — der Lauf wäre damit wertlos.
+    ".open-next/**",
+    ".wrangler/**",
+    "cloudflare-env.d.ts",
   ]),
 ]);
 

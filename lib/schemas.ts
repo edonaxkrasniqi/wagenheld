@@ -2,13 +2,53 @@ import { z } from 'zod'
 import { otherVehicleMake, vehicleMakeOptions } from '@/content/vehicleMakes'
 
 /**
- * Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO. Ohne aktives Häkchen wird die
- * Anfrage nicht verarbeitet — Vorab-Ankreuzen ist unzulässig. Steht in beiden
- * Formularen, weil in beiden personenbezogene Daten übermittelt werden.
+ * Bestätigung der Kenntnisnahme — bewusst KEINE Einwilligung nach Art. 6
+ * Abs. 1 lit. a DSGVO.
+ *
+ * Wer ein Fahrzeug anbietet oder sucht, will einen Vertrag anbahnen. Dafür
+ * trägt Art. 6 Abs. 1 lit. b DSGVO die Verarbeitung von sich aus; eine
+ * Einwilligung wäre daneben überflüssig. Schlimmer: Eine Einwilligung muss
+ * nach Art. 7 Abs. 4 DSGVO freiwillig sein. Ein Pflichthäkchen, ohne das das
+ * Formular nicht absendet, ist das nicht — die „Einwilligung" wäre unwirksam
+ * und der Widerruf liefe ins Leere, weil lit. b weiterträgt.
+ *
+ * Das Häkchen bleibt trotzdem: Es dokumentiert, dass die Hinweise nach Art. 13
+ * DSGVO zur Kenntnis genommen wurden. Vorab-Ankreuzen bleibt unzulässig.
+ *
+ * Wer den Text hier ändert, ändert ihn auch in
+ * `components/sections/VehicleSellingForm.tsx`, in `lib/mail.ts` und in
+ * Abschnitt 5 der Datenschutzerklärung. Die vier Stellen müssen dasselbe
+ * sagen.
  */
 const consentSchema = z.literal('on', {
   error: 'Bitte bestätigen Sie die Datenschutzhinweise',
 })
+/**
+ * Obergrenzen für die Kontaktfelder.
+ *
+ * `maxlength` im Markup ist eine Bequemlichkeit für den Browser, keine
+ * Kontrolle: Ein direkt abgesetzter POST kennt das Attribut nicht. Ohne
+ * Obergrenze könnte jemand ein Megabyte Text in den Betreff der Mail schieben.
+ * Die Werte sind großzügig genug, dass sie niemanden echten treffen.
+ */
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, 'Name ist erforderlich')
+  .max(100, 'Bitte den Namen kürzer angeben')
+
+const emailSchema = z
+  .string()
+  .trim()
+  .max(254, 'Die E-Mail-Adresse ist zu lang')
+  .email('Ungültige E-Mail-Adresse')
+
+const phoneSchema = z
+  .string()
+  .trim()
+  .max(40, 'Bitte die Telefonnummer kürzer angeben')
+  .optional()
+
 
 /**
  * Erstzulassung statt Baujahr — Kundenanforderung aus Trello-Karte #31.
@@ -55,16 +95,16 @@ export const sellingFormSchema = z
   .object({
     make: makeSchema,
     makeOther: otherMakeSchema,
-    model: z.string().min(1, 'Modell ist erforderlich'),
+    model: z.string().trim().min(1, 'Modell ist erforderlich').max(80, 'Bitte das Modell kürzer angeben'),
     firstRegistration: firstRegistrationSchema,
     mileage: z.coerce
       .number({ error: 'Kilometerstand muss eine Zahl sein' })
       .int()
       .positive('Kilometerstand muss positiv sein')
       .max(2_000_000, 'Bitte den Kilometerstand prüfen'),
-    name: z.string().min(2, 'Name ist erforderlich'),
-    email: z.string().email('Ungültige E-Mail-Adresse'),
-    phone: z.string().max(40).optional(),
+    name: nameSchema,
+    email: emailSchema,
+    phone: phoneSchema,
     consent: consentSchema,
   })
   .superRefine((data, ctx) => {
@@ -102,9 +142,9 @@ export const buyingFormSchema = z.object({
     .trim()
     .min(10, 'Bitte beschreiben Sie kurz, wonach Sie suchen')
     .max(2000, 'Bitte fassen Sie sich etwas kürzer'),
-  name: z.string().min(2, 'Name ist erforderlich'),
-  email: z.string().email('Ungültige E-Mail-Adresse'),
-  phone: z.string().max(40).optional(),
+  name: nameSchema,
+  email: emailSchema,
+  phone: phoneSchema,
   consent: consentSchema,
 })
 

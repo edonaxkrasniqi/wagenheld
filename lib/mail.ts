@@ -61,7 +61,7 @@ export function sendSellingLead(data: SellingFormData): Promise<boolean> {
       `E-Mail: ${data.email}`,
       `Telefon: ${data.phone || '-'}`,
       '',
-      'Einwilligung in die Datenschutzhinweise: erteilt',
+      'Datenschutzhinweise: zur Kenntnis genommen',
     ]
   )
 }
@@ -76,6 +76,6 @@ export function sendBuyingLead(data: BuyingFormData): Promise<boolean> {
     `E-Mail: ${data.email}`,
     `Telefon: ${data.phone || '-'}`,
     '',
-    'Einwilligung in die Datenschutzhinweise: erteilt',
+    'Datenschutzhinweise: zur Kenntnis genommen',
   ])
 }

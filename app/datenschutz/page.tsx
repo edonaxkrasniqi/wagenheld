@@ -2,7 +2,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
-import { company } from '@/lib/site'
+import {
+  company,
+  privacyPolicyDate,
+  processors,
+  supervisoryAuthority,
+} from '@/lib/site'
 
 export const metadata: Metadata = {
   title: `Datenschutzerklärung — ${company.shortName}`,
@@ -10,14 +15,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 }
 
-function Offen({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded text-sm font-semibold">
-      {children}
-    </span>
-  )
-}
-
+/**
+ * Maßstab dieser Seite ist Art. 13 DSGVO: Zweck, Rechtsgrundlage, Empfänger,
+ * Drittlandtransfer, Speicherdauer und Betroffenenrechte — und zwar so, wie es
+ * technisch tatsächlich abläuft.
+ *
+ * Der Abgleich in beide Richtungen ist Pflicht: Jeder hier genannte Dienst muss
+ * im Code vorkommen, und jeder Dienst im Code muss hier stehen. Die
+ * Firmierungen kommen aus `lib/site.ts`, damit sie nicht an mehreren Stellen
+ * auseinanderlaufen.
+ */
 export default function DatenschutzPage() {
   return (
     <div className="flex flex-col flex-1">
@@ -64,31 +71,53 @@ export default function DatenschutzPage() {
               </p>
             </section>
 
+            {/*
+              Die frühere Fassung nannte „ab 20 Personen" als alleinige
+              Voraussetzung. Das ist zu absolut: § 38 Abs. 1 BDSG kennt daneben
+              weitere Tatbestände, und Art. 37 Abs. 1 DSGVO greift unabhängig
+              von der Mitarbeiterzahl. Deshalb steht hier nur noch das Ergebnis
+              der tatsächlichen Prüfung, nicht deren vermeintliche Begründung.
+            */}
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
                 2. Datenschutzbeauftragter
               </h2>
               <p>
-                Ein Datenschutzbeauftragter ist nicht bestellt. Eine
-                Bestellpflicht besteht nach § 38 BDSG erst ab 20 Personen, die
-                ständig mit der automatisierten Verarbeitung personenbezogener
-                Daten beschäftigt sind. Bei Fragen zum Datenschutz wenden Sie
-                sich bitte an die oben genannte Adresse.
+                Wir haben geprüft, ob wir einen Datenschutzbeauftragten benennen
+                müssen. Nach dem Ergebnis dieser Prüfung besteht für uns keine
+                Benennungspflicht nach Art. 37 DSGVO in Verbindung mit § 38 BDSG;
+                ein Datenschutzbeauftragter ist deshalb nicht bestellt. Bei Fragen
+                zum Datenschutz wenden Sie sich bitte an die unter Ziffer 1
+                genannten Kontaktdaten.
               </p>
             </section>
 
             <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">3. Hosting</h2>
+              <h2 className="text-lg font-bold text-on-surface mb-2">
+                3. Hosting und Server-Protokolle
+              </h2>
               <p>
-                Diese Website wird bei{' '}
-                <Offen>Hosting-Anbieter mit vollständigem Namen und Anschrift</Offen>{' '}
-                gehostet. Beim Aufruf der Website erhebt der Hosting-Anbieter
-                automatisch Server-Log-Informationen (unter anderem IP-Adresse,
-                Datum und Uhrzeit der Anfrage, aufgerufene Seite, verwendeter
-                Browser). Diese Verarbeitung erfolgt auf Grundlage unseres
-                berechtigten Interesses an einem sicheren und stabilen Betrieb der
-                Website (Art. 6 Abs. 1 lit. f DSGVO). Mit dem Hosting-Anbieter
-                besteht ein Vertrag zur Auftragsverarbeitung gemäß Art. 28 DSGVO.
+                Diese Website wird bei {processors.hosting.name},{' '}
+                {processors.hosting.address}, betrieben und ausgeliefert. Beim
+                Aufruf der Website verarbeitet der Anbieter automatisch technische
+                Verbindungsdaten (unter anderem IP-Adresse, Datum und Uhrzeit der
+                Anfrage, aufgerufene Adresse, übertragene Datenmenge,
+                Referrer-Adresse sowie Browser- und Betriebssystemkennung).
+              </p>
+              <p className="mt-2">
+                Diese Verarbeitung ist für die Auslieferung der Seite technisch
+                notwendig und dient zugleich der Abwehr von Angriffen und
+                Überlastungen. Rechtsgrundlage ist unser berechtigtes Interesse an
+                einem sicheren und stabilen Betrieb der Website (Art. 6 Abs. 1
+                lit. f DSGVO). Mit dem Anbieter besteht ein Vertrag zur
+                Auftragsverarbeitung nach Art. 28 DSGVO.
+              </p>
+              <p className="mt-2">
+                {processors.hosting.name} betreibt ein weltweites Servernetz. Eine
+                Verarbeitung außerhalb der Europäischen Union, insbesondere in den
+                Vereinigten Staaten, kann deshalb nicht ausgeschlossen werden. Sie
+                erfolgt auf Grundlage der Standardvertragsklauseln nach Art. 46
+                Abs. 2 lit. c DSGVO.
               </p>
             </section>
 
@@ -104,32 +133,64 @@ export default function DatenschutzPage() {
               </p>
             </section>
 
+            {/*
+              Neu und im Audit ausdrücklich angemahnt: Die frühere Fassung
+              beschrieb nur das Ankauf-Formular. Tatsächlich gibt es zwei
+              Anfragearten, und die häufigste Kontaktaufnahme läuft ohnehin über
+              Telefon und E-Mail. Beides gehört hierher.
+            */}
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                5. Ankauf-Formular
+                5. Anfragen über die Formulare
               </h2>
               <p>
-                Wenn Sie uns über das Ankauf-Formular ein Fahrzeug anbieten,
-                verarbeiten wir die von Ihnen eingegebenen Daten — Name,
-                E-Mail-Adresse, optional Telefonnummer sowie die Fahrzeugangaben
-                Marke, Modell, Erstzulassung und Kilometerstand — ausschließlich
-                zur Bearbeitung Ihrer Anfrage und zur Kontaktaufnahme.
+                Auf dieser Website stehen zwei Anfragearten zur Verfügung. Beide
+                nutzen dasselbe Formular und denselben Versandweg:
+              </p>
+              <ul className="mt-2 list-disc pl-5 flex flex-col gap-1">
+                <li>
+                  <strong className="text-on-surface">Fahrzeug anbieten:</strong>{' '}
+                  Marke, Modell, Erstzulassung und Kilometerstand sowie Ihr Name,
+                  Ihre E-Mail-Adresse und optional Ihre Telefonnummer.
+                </li>
+                <li>
+                  <strong className="text-on-surface">Fahrzeug suchen:</strong>{' '}
+                  Ihre Freitextbeschreibung des gesuchten Fahrzeugs sowie Ihr
+                  Name, Ihre E-Mail-Adresse und optional Ihre Telefonnummer.
+                </li>
+              </ul>
+              <p className="mt-2">
+                Wir verarbeiten diese Angaben ausschließlich, um Ihre Anfrage zu
+                bearbeiten und mit Ihnen Kontakt aufzunehmen.
+              </p>
+              {/*
+                Rechtsgrundlage bewusst lit. b, nicht lit. a. Eine Einwilligung
+                muss nach Art. 7 Abs. 4 DSGVO freiwillig sein; ein Häkchen, ohne
+                das das Formular nicht absendet, ist das nicht. Das Häkchen im
+                Formular bestätigt deshalb nur noch die Kenntnisnahme dieser
+                Hinweise. Siehe `consentSchema` in lib/schemas.ts.
+              */}
+              <p className="mt-2">
+                Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO: Ihre Anfrage
+                betrifft die Anbahnung eines Kauf- oder Verkaufsvertrags, und die
+                Verarbeitung Ihrer Angaben ist erforderlich, um sie überhaupt
+                beantworten zu können. Eine gesonderte Einwilligung holen wir
+                dafür nicht ein — das Kästchen im Formular bestätigt lediglich,
+                dass Sie diese Hinweise zur Kenntnis genommen haben. Sie können
+                der Verarbeitung nach Art. 21 DSGVO widersprechen; Ihre Anfrage
+                lässt sich dann allerdings nicht mehr bearbeiten.
               </p>
               <p className="mt-2">
-                Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a
-                DSGVO, die Sie beim Absenden des Formulars ausdrücklich erteilen,
-                sowie Art. 6 Abs. 1 lit. b DSGVO für Maßnahmen zur Anbahnung
-                eines Vertrags. Sie können Ihre Einwilligung jederzeit formlos
-                widerrufen; die Rechtmäßigkeit der bis dahin erfolgten
-                Verarbeitung bleibt davon unberührt.
-              </p>
-              <p className="mt-2">
-                Der Versand erfolgt technisch über den E-Mail-Dienstleister
-                Resend (Resend, Inc., USA), mit dem ein Vertrag zur
-                Auftragsverarbeitung gemäß Art. 28 DSGVO besteht. Die
-                Übermittlung in die USA erfolgt auf Grundlage der
-                Standardvertragsklauseln nach Art. 46 Abs. 2 lit. c DSGVO in
-                Verbindung mit dem EU-US Data Privacy Framework.
+                Der technische Versand erfolgt über {processors.mailDelivery.brand}
+                , einen Dienst der {processors.mailDelivery.name},{' '}
+                {processors.mailDelivery.address}. Dabei werden Ihre
+                E-Mail-Adresse, der Nachrichteninhalt und technische Metadaten
+                verarbeitet. Der Anbieter speichert übermittelte Nachrichten nach
+                eigenen Angaben für bis zu 30 Tage in seinem Versandprotokoll. Mit
+                dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung nach
+                Art. 28 DSGVO; die Übermittlung in die Vereinigten Staaten erfolgt
+                auf Grundlage der Standardvertragsklauseln nach Art. 46 Abs. 2
+                lit. c DSGVO.
               </p>
               <p className="mt-2">
                 Ihre Anfrage wird ausschließlich als E-Mail an unser Postfach
@@ -138,33 +199,74 @@ export default function DatenschutzPage() {
                 statt.
               </p>
               <p className="mt-2">
-                Ihre Daten werden nicht an sonstige Dritte weitergegeben. Die
-                Daten werden spätestens sechs Monate nach Abschluss der
-                Anfragebearbeitung gelöscht, soweit keine gesetzlichen
-                Aufbewahrungspflichten entgegenstehen.
+                Ihre Daten werden nicht an sonstige Dritte weitergegeben. Wir
+                löschen Ihre Anfrage spätestens sechs Monate nach Abschluss der
+                Bearbeitung aus unserem Postfach, soweit keine gesetzlichen
+                Aufbewahrungspflichten entgegenstehen. Kommt es zu einem
+                Vertragsschluss, gelten die handels- und steuerrechtlichen
+                Aufbewahrungsfristen.
               </p>
+              {/*
+                Der frühere Satz empfahl aktiv, Fahrzeugscheine per E-Mail zu
+                schicken. Unverschlüsselte E-Mail ist dafür der falsche Kanal —
+                der Fahrzeugschein enthält Halterdaten. Der Hinweis bleibt, aber
+                ohne Empfehlung und mit dem Rat zur Schwärzung.
+              */}
               <p className="mt-2">
-                Über das Formular werden bewusst keine Dateien entgegengenommen.
-                Fahrzeugscheine und ähnliche Dokumente senden Sie uns bitte per
-                E-Mail, damit sie nicht dauerhaft auf dem Webserver liegen.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">6. Cookies</h2>
-              <p>
-                Diese Website verwendet keine Cookies zu Analyse- oder
-                Marketingzwecken und bindet keine externen Dienste ein, die vor
-                einer Einwilligung Daten übertragen. Sollten künftig
-                Analyse-Tools, Karten, Videos oder vergleichbare Technologien
-                eingesetzt werden, wird diese Erklärung ergänzt und, soweit
-                erforderlich, vorab eine Einwilligung eingeholt.
+                Über das Formular nehmen wir bewusst keine Dateien entgegen.
+                Sollten für die Bearbeitung Unterlagen wie ein Fahrzeugschein
+                erforderlich sein, sprechen wir Sie gezielt an und stimmen einen
+                geeigneten Übermittlungsweg ab. Bitte senden Sie solche Dokumente
+                nicht unaufgefordert per unverschlüsselter E-Mail und schwärzen
+                Sie darin alle Angaben, die für die Bewertung nicht benötigt
+                werden.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                7. Externe Links
+                6. Kontaktaufnahme per E-Mail und Telefon
+              </h2>
+              <p>
+                Wenn Sie uns unmittelbar anrufen oder eine E-Mail schreiben,
+                verarbeiten wir die dabei anfallenden Angaben — Ihren Namen, Ihre
+                Rufnummer oder E-Mail-Adresse und den Inhalt Ihrer Nachricht —
+                allein zur Beantwortung Ihres Anliegens. Rechtsgrundlage ist
+                Art. 6 Abs. 1 lit. b DSGVO, soweit es um die Anbahnung oder
+                Durchführung eines Vertrags geht, sonst Art. 6 Abs. 1 lit. f
+                DSGVO aufgrund unseres Interesses an der Beantwortung von
+                Anfragen.
+              </p>
+              <p className="mt-2">
+                Unser E-Mail-Postfach wird von der {processors.mailbox.name},{' '}
+                {processors.mailbox.address}, betrieben. Der Anbieter verarbeitet
+                dabei die Inhalte und Metadaten der eingehenden Nachrichten in
+                unserem Auftrag; ein Vertrag zur Auftragsverarbeitung nach Art. 28
+                DSGVO besteht. Die Verarbeitung findet in der Europäischen Union
+                statt.
+              </p>
+              <p className="mt-2">
+                Auch diese Nachrichten löschen wir spätestens sechs Monate nach
+                Abschluss der Bearbeitung, soweit keine gesetzlichen
+                Aufbewahrungspflichten entgegenstehen.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-bold text-on-surface mb-2">7. Cookies</h2>
+              <p>
+                Diese Website verwendet keine Cookies zu Analyse- oder
+                Marketingzwecken und bindet keine externen Dienste ein, die vor
+                einer Einwilligung Daten übertragen. Sollten künftig
+                Analyse-Tools, Karten, Videos oder vergleichbare Technologien
+                eingesetzt werden, wird diese Erklärung ergänzt und, soweit nach
+                § 25 TDDDG erforderlich, vorab eine Einwilligung eingeholt.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-bold text-on-surface mb-2">
+                8. Externe Links
               </h2>
               <p>
                 Von dieser Website führen Links zu externen Angeboten, unter
@@ -177,7 +279,7 @@ export default function DatenschutzPage() {
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                8. Ihre Rechte
+                9. Ihre Rechte
               </h2>
               <p>
                 Sie haben jederzeit das Recht auf Auskunft über Ihre bei uns
@@ -188,30 +290,27 @@ export default function DatenschutzPage() {
               </p>
               <p className="mt-2">
                 Zudem steht Ihnen ein Beschwerderecht bei einer
-                Datenschutz-Aufsichtsbehörde zu. Zuständig ist der Landesbeauftragte
-                für den Datenschutz und die Informationsfreiheit Baden-Württemberg,
-                Lautenschlagerstraße 20, 70173 Stuttgart.
+                Datenschutz-Aufsichtsbehörde zu. Für uns zuständig ist{' '}
+                {supervisoryAuthority.name}, {supervisoryAuthority.address}.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                9. SSL-/TLS-Verschlüsselung
+                10. SSL-/TLS-Verschlüsselung
               </h2>
               <p>
-                Diese Seite nutzt aus Sicherheitsgründen eine
+                Diese Seite nutzt aus Sicherheitsgründen durchgehend eine
                 SSL-/TLS-Verschlüsselung zur Übertragung vertraulicher Inhalte,
-                etwa Ihrer Anfragen über das Ankauf-Formular.
+                etwa Ihrer Anfragen über die Formulare.
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                10. Stand dieser Erklärung
+                11. Stand dieser Erklärung
               </h2>
-              <p>
-                <Offen>Datum beim Livegang eintragen</Offen>
-              </p>
+              <p>{privacyPolicyDate}</p>
             </section>
           </div>
         </div>

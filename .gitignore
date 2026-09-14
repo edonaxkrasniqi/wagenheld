@@ -43,3 +43,9 @@ next-env.d.ts
 # Zwischenschritt der Kundenabfrage — enthält nur das Template plus eingebettetes Logo
 docs/kundenabfrage.html
 docs/_logo.b64
+.open-next
+cloudflare-env.d.ts
+.wrangler
+
+# Lokale Claude-/Cowork-Einstellungen
+.claude/

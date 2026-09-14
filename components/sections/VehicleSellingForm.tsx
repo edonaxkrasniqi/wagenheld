@@ -354,13 +354,11 @@ export function VehicleSellingForm() {
             className="mt-0.5 h-5 w-5 shrink-0 accent-warm-ink"
           />
           <label htmlFor={`${id}-consent`} className="text-sm text-warm-muted leading-relaxed">
-            Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner
-            Anfrage gespeichert und verarbeitet werden. Die Einwilligung kann
-            jederzeit widerrufen werden. Weitere Informationen in der{' '}
+            Ich habe die{' '}
             <Link href="/datenschutz" className="text-gold-ink underline underline-offset-2 hover:no-underline">
               Datenschutzerklärung
-            </Link>
-            .
+            </Link>{' '}
+            zur Kenntnis genommen.
           </label>
         </div>
 

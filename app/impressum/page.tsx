@@ -113,31 +113,29 @@ export default function ImpressumPage() {
               */}
             </section>
 
-            <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">
-                Haftung für Inhalte
-              </h2>
-              <p>
-                Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene
-                Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
-                verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter
-                jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
-                Informationen zu überwachen oder nach Umständen zu forschen, die
-                auf eine rechtswidrige Tätigkeit hinweisen.
-              </p>
-            </section>
+            {/*
+              Kein Abschnitt „Haftung für Inhalte" und keiner „Haftung für
+              Links". Beides war die verbreitete TMG-Textbausteinvorlage, in der
+              nur „TMG" durch „DDG" ersetzt worden war. Diese Umschrift ist
+              inhaltlich falsch:
 
-            <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">
-                Haftung für Links
-              </h2>
-              <p>
-                Unser Angebot enthält Links zu externen Websites Dritter, auf
-                deren Inhalte wir keinen Einfluss haben. Für die Inhalte der
-                verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber
-                verantwortlich.
-              </p>
-            </section>
+              · § 7 DDG heißt „Beschränkte Verantwortlichkeit" und verweist auf
+                die Artikel 4 bis 8 der Verordnung (EU) 2022/2065 (DSA). Er ist
+                keine Anspruchsgrundlage für die Verantwortlichkeit für eigene
+                Inhalte.
+              · § 10 DDG regelt das „Auskunftsverlangen der nach Landesrecht
+                zuständigen Behörde" bei audiovisuellen Mediendiensten und hat
+                mit Haftungsprivilegien nichts zu tun. Die Privilegierung von
+                Host-Providern steht heute in Art. 4 bis 6 DSA, das Verbot
+                allgemeiner Überwachungspflichten in Art. 8 DSA.
+
+              Beide Abschnitte sind ohnehin reine Wiedergabe der Gesetzeslage:
+              Sie begründen und begrenzen keine Haftung. Ein falsches Zitat
+              nützt also nichts und schadet — deshalb ersatzlos gestrichen.
+
+              Wer sie wieder aufnehmen will, nimmt vorher die DSA-Artikel zur
+              Hand, nicht eine Vorlage aus dem Netz.
+            */}
           </div>
         </div>
       </main>

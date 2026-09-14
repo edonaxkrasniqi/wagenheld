@@ -145,3 +145,28 @@
     scroll-behavior: auto;
   }
 }
+
+/*
+  Reveal-Animation (siehe components/ui/Reveal.tsx).
+
+  Der Versteckzustand steht bewusst hier und nicht in React: Ohne JavaScript
+  darf kein Inhalt verschwinden. Die Regel greift ausschließlich, wenn der
+  Besucher Bewegung nicht abbestellt hat — sonst ist sie gar nicht erst aktiv.
+
+  Die Entsperrung für abgeschaltetes JavaScript steht als <noscript>-Block in
+  app/layout.tsx. Wer diesen Selektor umbenennt, benennt ihn dort mit um.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity 700ms ease-out,
+      transform 700ms ease-out;
+  }
+
+  [data-reveal][data-revealed='true'] {
+    opacity: 1;
+    transform: none;
+  }
+}

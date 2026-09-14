@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface RevealProps {
   children: React.ReactNode
@@ -11,56 +11,62 @@ interface RevealProps {
 /**
  * Blendet den Inhalt beim Hineinscrollen ein.
  *
- * Zwei Dinge waren vorher kaputt:
+ * Wichtigste Regel: **Sichtbarkeit darf nicht von JavaScript abhängen.** Die
+ * Animation ist Zugabe, keine Voraussetzung. Vorher lag der Versteckzustand in
+ * einer React-State-Variablen — ohne JavaScript blieb die halbe Seite
+ * dauerhaft leer, inklusive Kontaktdaten.
  *
- * 1. Die Prüfung auf "prefers-reduced-motion" stand im useState-Initializer.
- *    Bei serverseitig gerendertem HTML übernimmt React beim Hydrieren den
- *    Server-Wert und verwirft den Initializer auf dem Client — die
- *    Systemeinstellung wurde also schlicht ignoriert.
- * 2. Wenn der IntersectionObserver aus irgendeinem Grund nicht auslöst,
- *    blieb der halbe Seiteninhalt dauerhaft unsichtbar. Genau das ist beim
- *    Erstellen der Screenshots passiert. Ein Nutzer hätte eine leere Seite
- *    gesehen und nie erfahren, warum.
+ * Jetzt liegt er in CSS (`app/globals.css`, Selektor `[data-reveal]`), und
+ * zwar ausschließlich innerhalb von `prefers-reduced-motion: no-preference`.
+ * Wer Bewegung abbestellt hat, sieht den Inhalt sofort und ungefiltert. Wer
+ * JavaScript abgeschaltet hat, ebenfalls — dafür sorgt der
+ * `<noscript>`-Block in `app/layout.tsx`.
  *
- * Deshalb: Reduced-Motion wird jetzt im Effekt geprüft, und es gibt einen
- * Sicherheitsnetz-Timer. Nach spätestens 1,5 Sekunden ist der Inhalt sichtbar,
- * egal was der Observer macht.
+ * Diese Komponente setzt deshalb keinen State mehr, sondern schreibt nur noch
+ * ein Attribut auf ihren eigenen DOM-Knoten. Genau dafür sind Effekte da: ein
+ * externes System (hier das DOM) mit dem Stand von React abgleichen. Ein
+ * `setState` im Effektkörper wäre nicht nur ein Lint-Fehler, sondern löste
+ * eine Renderkaskade über jede Reveal-Instanz der Seite aus.
+ *
+ * Bleibt ein Restrisiko: JavaScript ist aktiviert, das Bundle lädt aber nicht.
+ * Dann greift `<noscript>` nicht und der Inhalt bliebe verborgen. Deshalb der
+ * Sicherheitsnetz-Timer unten — er ist kein Schmuck, sondern der Grund, warum
+ * ein hängender IntersectionObserver die Seite nicht mehr leer lässt.
  */
 export function Reveal({ children, className = '', delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (visible) return
+    const node = ref.current
+    if (!node) return
 
-    const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    if (prefersReducedMotion || typeof IntersectionObserver === 'undefined') {
-      setVisible(true)
-      return
+    const reveal = () => {
+      node.dataset.revealed = 'true'
     }
 
-    const node = ref.current
-    if (!node) {
-      setVisible(true)
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
+
+    if (prefersReducedMotion || typeof IntersectionObserver === 'undefined') {
+      reveal()
       return
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.disconnect()
-        }
+        if (!entry.isIntersecting) return
+        reveal()
+        observer.disconnect()
       },
       { threshold: 0.15 }
     )
     observer.observe(node)
 
+    // Nach spätestens 1,5 Sekunden ist der Inhalt sichtbar, egal was der
+    // Observer macht.
     const fallback = window.setTimeout(() => {
-      setVisible(true)
+      reveal()
       observer.disconnect()
     }, 1500)
 
@@ -68,14 +74,13 @@ export function Reveal({ children, className = '', delay = 0 }: RevealProps) {
       observer.disconnect()
       window.clearTimeout(fallback)
     }
-  }, [visible])
+  }, [])
 
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ease-out motion-reduce:transition-none ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      } ${className}`}
+      data-reveal=""
+      className={className}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}

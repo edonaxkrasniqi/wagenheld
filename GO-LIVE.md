@@ -19,9 +19,17 @@ Platzhalter sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 
 ### A1 · Blockiert den Livegang
 
-- [ ] **Hosting-Anbieter mit vollem Namen und Anschrift**, plus abgeschlossener
-      Auftragsverarbeitungsvertrag nach Art. 28 DSGVO. Hängt an B3.
-      → `app/datenschutz/page.tsx`
+- [ ] **Auftragsverarbeitungsvertrag mit Cloudflare** im Cloudflare-Dashboard
+      annehmen (Manage Account → Configurations, Abschnitt zum Datenschutz).
+      Der Anbieter selbst steht bereits namentlich in der
+      Datenschutzerklärung — die Zusage „ein AV-Vertrag besteht" ist aber
+      erst wahr, wenn er tatsächlich angenommen wurde.
+      → `lib/site.ts` (`processors.hosting`), ausgegeben in
+      `app/datenschutz/page.tsx`
+
+- [ ] **Auftragsverarbeitungsvertrag mit IONOS** für das Postfach prüfen bzw.
+      abschließen. Steht ebenfalls schon in der Erklärung.
+      → `lib/site.ts` (`processors.mailbox`)
 
 ### A1-erledigt · Vom Kunden geliefert und eingebaut
 
@@ -78,18 +86,41 @@ in den Seiten.
 
 ### B1 · Domain
 
-- [ ] **Aktueller Registrar und Auth-Code** für `automobilzentrum-wagenheld.de`
-      besorgen. Der Auth-Code wird beim bisherigen Anbieter angefordert und
-      direkt beim neuen Registrar eingegeben.
+- [x] **Registrar ermittelt:** IONOS (Nameserver `ns10xx.ui-dns.{org,biz,com,de}`).
+      Die Domain bleibt dort registriert — es wechseln **nur die Nameserver**.
+      Ein Registrar-Umzug findet nicht statt, ein **Auth-Code wird dafür nicht
+      gebraucht**.
 
-      > Der Auth-Code gehört **nirgendwo** in dieses Repository: nicht in den
-      > Quellcode, nicht in eine eingecheckte `.env`, nicht ins Frontend, nicht
-      > in diese Datei. Er ist das Passwort zur Domain — wer ihn hat, kann sie
-      > übernehmen. Weitergabe nur über einen vertraulichen Kanal.
-- [ ] **MX-Einträge vor dem Umzug sichern.** Die E-Mail-Zustellung an
-      `info@automobilzentrum-wagenheld.de` darf während der Umstellung **nicht**
-      ausfallen.
-- [ ] DNS auf das Hosting umstellen (A/AAAA bzw. CNAME).
+      > Falls doch je ein Auth-Code angefordert wird: Er gehört **nirgendwo**
+      > in dieses Repository — nicht in den Quellcode, nicht in eine
+      > eingecheckte `.env`, nicht ins Frontend, nicht in diese Datei. Er ist
+      > das Passwort zur Domain. Wurde er über einen unsicheren Kanal
+      > verschickt (Messenger, E-Mail, Screenshot), im IONOS-Konto sofort neu
+      > erzeugen.
+- [ ] **Kompletten Zonen-Export bei IONOS ziehen**, bevor irgendetwas
+      umgestellt wird. Stand 26.08.2026 von außen sichtbar:
+
+      | Typ | Name | Wert |
+      |---|---|---|
+      | MX | @ | `mx00.ionos.de`, `mx01.ionos.de` (Prio 10) |
+      | TXT | @ | `v=spf1 include:_spf-eu.ionos.com ~all` |
+      | CNAME | `_dmarc` | `dmarc.ionos.de` (löst auf `v=DMARC1; p=none;`) |
+      | CNAME | `autodiscover` | `adsredir.ionos.info` |
+      | A | @ | `217.160.0.69` (IONOS-Parkseite, entfällt) |
+
+      **Der DKIM-Selektor fehlt in dieser Liste** — er ließ sich von außen
+      nicht ermitteln. Er steht nur im IONOS-Panel und muss aus dem Export
+      übernommen werden. Ohne ihn bricht die DKIM-Signatur nach dem Umzug.
+- [ ] **TTL bei IONOS auf 300 Sekunden senken** und 24 Stunden warten, bevor
+      die Nameserver wechseln. Dann ist ein Rückzug in Minuten möglich statt
+      in Tagen.
+- [ ] Zone bei Cloudflare anlegen, alle Einträge **gegen den Export prüfen** —
+      der Import-Scan findet MX und SPF zuverlässig, DKIM oft nicht.
+- [ ] **Alle Mail-Einträge auf „DNS only" (graue Wolke)** stellen. Proxied
+      zerstört die Zustellung.
+- [ ] Erst danach die Nameserver bei IONOS auf Cloudflare umstellen.
+- [ ] `www` als Custom Domain an den Worker hängen, Apex per Weiterleitungsregel
+      auf `www` (oder umgekehrt — aber einheitlich mit dem Canonical).
 - [ ] Nach der Umstellung: E-Mail-Empfang **testen und dokumentieren**.
 - [ ] `NEXT_PUBLIC_SITE_URL` auf die endgültige Domain setzen — davon hängen
       Sitemap, robots.txt, Canonical-Links und die Open-Graph-URLs ab.
@@ -107,8 +138,16 @@ in den Seiten.
       LEAD_FROM_EMAIL="Automobilzentrum Wagenheld <leads@automobilzentrum-wagenheld.de>"
       LEAD_TO_EMAIL=info@automobilzentrum-wagenheld.de
 
-- [ ] **SPF, DKIM und DMARC** für die Versanddomain setzen. Ohne das landen die
-      Anfragen im Spam — oder gar nicht.
+- [ ] **Resend auf einer Subdomain betreiben**, z. B.
+      `send.automobilzentrum-wagenheld.de`. Grund: Es darf pro Name nur **einen**
+      SPF-TXT-Eintrag geben. Der bestehende IONOS-SPF bleibt so unangetastet;
+      ein zweiter SPF-Eintrag auf der Hauptdomain macht beide ungültig.
+- [ ] **SPF, DKIM und DMARC** für diese Versand-Subdomain setzen. Ohne das
+      landen die Anfragen im Spam — oder gar nicht.
+- [ ] `LEAD_FROM_EMAIL` auf die verifizierte Subdomain anpassen, etwa
+      `Automobilzentrum Wagenheld <leads@send.automobilzentrum-wagenheld.de>`.
+- [ ] **DMARC härten:** aktuell `p=none`. Nach einer Beobachtungsphase mit
+      Reports auf `quarantine`, später gegebenenfalls `reject`.
 - [ ] **Auftragsverarbeitungsvertrag mit Resend** abschließen. Der Dienst steht
       bereits namentlich in der Datenschutzerklärung.
 - [ ] **Testanfrage abschicken und den Eingang dokumentieren** — beide
@@ -129,18 +168,46 @@ in den Seiten.
 > meldet dem Absender ehrlich, dass die Übermittlung fehlgeschlagen ist, und
 > verweist auf Telefon und E-Mail. Trotzdem: vor dem Livegang einrichten.
 
-### B3 · Hosting
+### B3 · Hosting — Cloudflare Workers
 
-- [ ] **Anbieter festlegen** und den AV-Vertrag abschließen. Serverstandort und
-      AV-Vertrag fließen direkt in die Datenschutzerklärung (A1).
-- [ ] **HTTPS erzwingen, HSTS setzen.**
-- [ ] Environment-Variablen aus B1 und B2 hinterlegen.
+Der Anbieter steht fest: **Cloudflare Workers**, betrieben über den
+Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
+(`npm run deploy`); Konfiguration in `wrangler.jsonc` und `open-next.config.ts`.
+
+- [ ] **Zone anlegen** und die Nameserver bei IONOS umstellen (siehe B1). Ohne
+      aktive Cloudflare-Zone lässt sich keine Custom Domain an den Worker
+      hängen — für die Apex-Domain gibt es keinen CNAME-Weg.
+- [ ] **HTTPS erzwingen** (SSL/TLS → Edge Certificates → Always Use HTTPS) und
+      **HSTS** dort aktivieren. Bewusst nicht in `next.config.ts`: zwei Stellen
+      für denselben Header laufen auseinander.
+- [ ] SSL/TLS-Modus auf **Full (strict)**.
+- [ ] **Bot Fight Mode ausgeschaltet lassen.** Er setzt das Cookie `__cf_bm`.
+      Damit wäre die Zusage „diese Website verwendet keine Cookies" aus der
+      Datenschutzerklärung falsch und die Consent-Frage neu zu stellen.
+- [ ] **Web Analytics nur ohne Cookies** einsetzen — und dann in die
+      Datenschutzerklärung aufnehmen. Im Zweifel weglassen.
+- [ ] **Rate-Limiting-Regel** für die Formular-POSTs auf `/` anlegen
+      (Security → WAF → Rate limiting rules).
+- [ ] Environment-Variablen aus B1 und B2 als **Secrets** hinterlegen:
+      `npx wrangler secret put RESEND_API_KEY`. `LEAD_FROM_EMAIL`,
+      `LEAD_TO_EMAIL` und `NEXT_PUBLIC_SITE_URL` gehören als `vars` in
+      `wrangler.jsonc` — `NEXT_PUBLIC_SITE_URL` wird zur Buildzeit
+      eingebacken, muss also **vor** dem Build stimmen.
 
 ---
 
 ## C · Offene Arbeit am Code
 
-- [ ] **Reveal-Animation von JavaScript entkoppeln.** Der Inhalt startet
+- [x] **Reveal-Animation von JavaScript entkoppeln.** Erledigt am 26.08.2026:
+      Der Versteckzustand liegt jetzt in `app/globals.css` unter
+      `[data-reveal]`, ausschließlich innerhalb von
+      `prefers-reduced-motion: no-preference`; die `<noscript>`-Entsperrung
+      steht in `app/layout.tsx`. `components/ui/Reveal.tsx` setzt keinen State
+      mehr, sondern nur noch ein Attribut — damit ist auch der Lint-Fehler
+      `react-hooks/set-state-in-effect` weg.
+
+      *(Ursprüngliche Beschreibung:)*
+      **Reveal-Animation von JavaScript entkoppeln.** Der Inhalt startet
       unsichtbar und wird per JavaScript eingeblendet; ohne JavaScript bleibt
       die halbe Seite dauerhaft leer. Der Versteckzustand gehört in CSS
       innerhalb von `prefers-reduced-motion: no-preference`, dazu eine
@@ -162,7 +229,9 @@ in den Seiten.
       Klick.
 
 - [ ] **Bilder in modernen Formaten ausliefern** (AVIF/WebP). Die Hero-Aufnahme
-      wiegt als PNG gut 1,5 MB.
+      wiegt als PNG gut 1,5 MB. Die `IMAGES`-Bindung in `wrangler.jsonc`
+      übernimmt die Umrechnung auf Cloudflare — nach dem ersten Deploy mit
+      Lighthouse gegenprüfen, ob sie tatsächlich greift.
 
 - [ ] **Barrierefreiheits-Durchlauf über alle Seiten und Zustände** — nicht nur
       die Startseite: Fehlerzustände der Formulare, Fokus, Hover, mobiles Menü.
@@ -170,7 +239,13 @@ in den Seiten.
 
 - [ ] **Lighthouse mobil**: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95.
 
-- [ ] **Datum „Stand" in der Datenschutzerklärung** beim Livegang eintragen.
+- [x] **Datum „Stand" in der Datenschutzerklärung** — steht als
+      `privacyPolicyDate` in `lib/site.ts` (26. August 2026). Bei jeder weiteren
+      inhaltlichen Änderung dort hochziehen.
+
+- [ ] **Fokusfalle im mobilen Menü.** Der Dialog hält den Tastaturfokus nicht;
+      nach dem letzten Menüpunkt springt er in den Hintergrund. Nach Escape
+      landet er auf dem Dokumentkörper statt auf dem Menü-Button.
 
 ---
 
