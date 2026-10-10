@@ -31,7 +31,10 @@ export function Hero() {
           src={heroContent.imageUrl}
           alt={heroContent.imageAlt}
           fill
-          priority
+          // `priority` ist seit Next.js 16 veraltet. Das Hero-Bild ist auf
+          // jeder Breite das LCP-Element, also hohe Abrufpriorität.
+          fetchPriority="high"
+          loading="eager"
           // Das Fahrzeug steht rechts, links bleibt Fläche für den Text. Auf
           // dem Handy schneidet `object-cover` so stark, dass zentriert nur
           // der leere Teil zu sehen wäre — deshalb dort rechts ausrichten.

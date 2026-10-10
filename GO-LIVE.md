@@ -1,6 +1,6 @@
 # Go-Live-Checkliste
 
-Was vor dem Schalten der Seite erledigt sein muss. Stand: 25.08.2026.
+Was vor dem Schalten der Seite erledigt sein muss. Stand: 11.10.2026.
 
 Die Liste hat drei Teile: **A** sind Angaben, die nur vom Kunden kommen können —
 ohne sie darf die Seite nicht online. **B** ist Infrastruktur (Domain, E-Mail,
@@ -19,16 +19,18 @@ Platzhalter sind bewusst sichtbar und nicht mit erfundenen Werten gefüllt.
 
 ### A1 · Blockiert den Livegang
 
-- [ ] **Auftragsverarbeitungsvertrag mit Cloudflare** im Cloudflare-Dashboard
-      annehmen (Manage Account → Configurations, Abschnitt zum Datenschutz).
-      Der Anbieter selbst steht bereits namentlich in der
-      Datenschutzerklärung — die Zusage „ein AV-Vertrag besteht" ist aber
-      erst wahr, wenn er tatsächlich angenommen wurde.
+- [ ] **Auftragsverarbeitungsvertrag mit Cloudflare** sicherstellen. Stand
+      10/2026: Der DPA ist Bestandteil des Self-Serve Subscription Agreement
+      (Ziffer 6.1, „incorporated by reference") und gilt mit Annahme der AGB.
+      Aktuelle Fassung als PDF von cloudflare.com/dpa ablegen. Das Konto
+      sollte auf den **Kunden** laufen (Vertragspartner), wir als Mitglied.
       → `lib/site.ts` (`processors.hosting`), ausgegeben in
       `app/datenschutz/page.tsx`
 
-- [ ] **Auftragsverarbeitungsvertrag mit IONOS** für das Postfach prüfen bzw.
-      abschließen. Steht ebenfalls schon in der Erklärung.
+- [ ] **Auftragsverarbeitungsvertrag mit IONOS** für das Postfach prüfen.
+      Seit 19.07.2022 Teil der IONOS-AGB; bei älteren Verträgen gesondert
+      abschließen: Mein Konto → Datenschutz & Privatsphäre → Vereinbarung zur
+      Auftragsverarbeitung (AVV). Steht ebenfalls schon in der Erklärung.
       → `lib/site.ts` (`processors.mailbox`)
 
 ### A1-erledigt · Vom Kunden geliefert und eingebaut
@@ -61,10 +63,16 @@ in den Seiten.
 
 ### A2 · Sollte vor dem Livegang geklärt sein
 
-- [ ] **Öffnungszeiten** — oder die ausdrückliche Auskunft „nur nach
-      Vereinbarung". Aktuell steht dazu nirgends etwas, weil geraten nicht
-      infrage kommt. Die Struktur ist vorbereitet; sobald die Zeiten da sind,
-      erscheinen Kachel und strukturierte Daten automatisch.
+- [x] **Öffnungszeiten** eingebaut am 10.10.2026: Mo–Fr 9–18 Uhr, Sa 9–13 Uhr,
+      So geschlossen — aus dem vom Betrieb gepflegten Google-Unternehmensprofil.
+      Kontaktleiste, Footer und strukturierte Daten lesen aus `lib/site.ts`
+      (`openingHours`). Vom Kunden nicht gesondert bestätigt; ändert er sie
+      bei Google, hier nachziehen.
+
+- [x] **WhatsApp-Kontakt** eingebaut am 10.10.2026: `wa.me/491791596072`
+      (dieselbe Mobilnummer). Link, kein Widget — überträgt nichts vor dem
+      Klick. Datenschutzerklärung Ziffer 7. **Offen beim Kunden:** dass er
+      WhatsApp Business (App) nutzt, wie im Text angegeben.
 
 - [ ] **Garantie: Garantiegeber, Deckungsumfang und Kosten.**
       Auf der Seite steht „Optional bis 36 Monate". § 479 BGB verlangt, dass
@@ -76,9 +84,12 @@ in den Seiten.
       Der Satz ist eine Zusage. Er muss für jedes verkaufte Fahrzeug stimmen,
       sonst ist er nach § 5 UWG angreifbar.
 
-- [ ] **Google-Business-Link**, falls vorhanden. Nur dann kann eine
-      Bewertungssektion überhaupt wieder aufgebaut werden — mit echten
-      Bewertungen und Quellenangabe.
+- [ ] **Bewertungen:** Ein Google-Unternehmensprofil existiert (5,0 aus 23
+      Rezensionen, Stand 10.10.2026). Eine Bewertungssektion bleibt trotzdem
+      aus — Rezensionstexte dürfen nicht einfach übernommen werden, und eine
+      fest eingetragene Sternezahl veraltet. Falls gewünscht: nur als Link
+      „Bewertungen auf Google ansehen" oder über die Places API mit
+      Quellenangabe (§ 5b Abs. 3 UWG).
 
 ---
 
@@ -97,25 +108,32 @@ in den Seiten.
       > das Passwort zur Domain. Wurde er über einen unsicheren Kanal
       > verschickt (Messenger, E-Mail, Screenshot), im IONOS-Konto sofort neu
       > erzeugen.
-- [ ] **Kompletten Zonen-Export bei IONOS ziehen**, bevor irgendetwas
-      umgestellt wird. Stand 26.08.2026 von außen sichtbar:
+- [ ] **DNS-Einträge bei IONOS vollständig abschreiben bzw. Screenshots**,
+      bevor irgendetwas umgestellt wird. IONOS bietet für Domain-DNS **keinen
+      Zonen-Export** (der „Domain-Export" liefert nur Stammdaten). Stand
+      10.10.2026 von außen sichtbar:
 
       | Typ | Name | Wert |
       |---|---|---|
-      | MX | @ | `mx00.ionos.de`, `mx01.ionos.de` (Prio 10) |
+      | MX | @ | `mx00.ionos.de`, `mx01.ionos.de` (beide Prio 10) |
       | TXT | @ | `v=spf1 include:_spf-eu.ionos.com ~all` |
       | CNAME | `_dmarc` | `dmarc.ionos.de` (löst auf `v=DMARC1; p=none;`) |
       | CNAME | `autodiscover` | `adsredir.ionos.info` |
-      | A | @ | `217.160.0.69` (IONOS-Parkseite, entfällt) |
+      | CNAME | `s1-ionos._domainkey` | `s1.dkim.ionos.com` (DKIM) |
+      | CNAME | `s2-ionos._domainkey` | `s2.dkim.ionos.com` (DKIM) |
+      | A | @ | `217.160.0.69` (alte IONOS-Seite, entfällt mit dem Livegang) |
+      | AAAA | @ | `2001:8d8:100f:f000::200` (dito) |
 
-      **Der DKIM-Selektor fehlt in dieser Liste** — er ließ sich von außen
-      nicht ermitteln. Er steht nur im IONOS-Panel und muss aus dem Export
-      übernommen werden. Ohne ihn bricht die DKIM-Signatur nach dem Umzug.
-- [ ] **TTL bei IONOS auf 300 Sekunden senken** und 24 Stunden warten, bevor
-      die Nameserver wechseln. Dann ist ein Rückzug in Minuten möglich statt
-      in Tagen.
-- [ ] Zone bei Cloudflare anlegen, alle Einträge **gegen den Export prüfen** —
-      der Import-Scan findet MX und SPF zuverlässig, DKIM oft nicht.
+      Die DKIM-Selektoren sind damit gefunden. Trotzdem im IONOS-Panel gegen
+      die Liste prüfen — Subdomains, die nur dort stehen, sieht man von außen
+      nicht. DNSSEC ist nicht aktiv (kein DS-Record), Domain Guard prüfen.
+- [x] ~~TTL senken~~ — entfällt. Beim Nameserverwechsel zählt die TTL der
+      Delegation in der .de-Zone, nicht die der eigenen Einträge. Das
+      Sicherheitsnetz ist eine vollständige, geprüfte Cloudflare-Zone **vor**
+      der Umstellung; prüfen per `dig @<cloudflare-ns>` und nast.denic.de.
+- [ ] Zone bei Cloudflare anlegen, alle Einträge **gegen die Liste prüfen** —
+      der Quick Scan findet MX und SPF zuverlässig, die DKIM-CNAMEs
+      `s1-ionos`/`s2-ionos` und `_dmarc` nicht.
 - [ ] **Alle Mail-Einträge auf „DNS only" (graue Wolke)** stellen. Proxied
       zerstört die Zustellung.
 - [ ] Erst danach die Nameserver bei IONOS auf Cloudflare umstellen.
@@ -182,12 +200,16 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
       für denselben Header laufen auseinander.
 - [ ] SSL/TLS-Modus auf **Full (strict)**.
 - [ ] **Bot Fight Mode ausgeschaltet lassen.** Er setzt das Cookie `__cf_bm`.
-      Damit wäre die Zusage „diese Website verwendet keine Cookies" aus der
-      Datenschutzerklärung falsch und die Consent-Frage neu zu stellen.
+      Ziffer 8 der Datenschutzerklärung sagt zu, dass keine Cookies zu
+      Analyse- oder Marketingzwecken gesetzt werden und keine Dienste Daten
+      vor einer Einwilligung übertragen; tatsächlich setzt die Seite heute
+      gar keine Cookies. Das soll so bleiben — jedes neue Cookie gehört
+      vorher in die Erklärung.
 - [ ] **Web Analytics nur ohne Cookies** einsetzen — und dann in die
       Datenschutzerklärung aufnehmen. Im Zweifel weglassen.
 - [ ] **Rate-Limiting-Regel** für die Formular-POSTs auf `/` anlegen
-      (Security → WAF → Rate limiting rules).
+      (Security → WAF → Rate limiting rules). Nach IP zählen, **nicht** nach
+      `cf.unique_visitor_id` — das setzt das Cookie `_cfuvid`.
 - [ ] Environment-Variablen aus B1 und B2 als **Secrets** hinterlegen:
       `npx wrangler secret put RESEND_API_KEY`. `LEAD_FROM_EMAIL`,
       `LEAD_TO_EMAIL` und `NEXT_PUBLIC_SITE_URL` gehören als `vars` in
@@ -215,7 +237,8 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
       *(Sichtbarkeit darf nie von JavaScript abhängen — die Animation ist
       Zugabe, keine Voraussetzung.)*
 
-- [ ] **Formularfehler pro Feld statt einer Sammelmeldung.** Aktuell erscheint
+- [x] **Formularfehler pro Feld statt einer Sammelmeldung.** Erledigt am 10.10.2026: Meldung am Feld (`aria-describedby`, `aria-invalid`, roter Rahmen), Fokus aufs erste fehlerhafte Feld, Eingaben bleiben erhalten, Statusmeldung als dauerhafte Live-Region außerhalb des Formulars. Tests in `tests/actions.test.mjs`.
+      *(Ursprünglich:)* Aktuell erscheint
       nur die erste Fehlermeldung über dem Absendeknopf. Nötig:
       `aria-describedby` am jeweiligen Feld, `aria-invalid`, und der Fokus
       springt auf das erste fehlerhafte Feld.
@@ -224,26 +247,27 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
       solange die Gesellschafter-Angabe leer ist. Lieber ein rotes Build als
       ein unvollständiges Impressum online.
 
-- [ ] **Eigene 404-Seite** mit Footer und Impressum-Link. Aktuell greift die
+- [x] **Eigene 404-Seite** — erledigt am 10.10.2026, `app/not-found.tsx`. mit Footer und Impressum-Link. Aktuell greift die
       Standardseite von Next.js — ohne Footer, damit ohne Impressum in einem
       Klick.
 
-- [ ] **Bilder in modernen Formaten ausliefern** (AVIF/WebP). Die Hero-Aufnahme
+- [x] **Bilder in modernen Formaten ausliefern** — erledigt am 10.10.2026: Quellen als WebP (Hero 18 KB statt 970 KB), `images.formats` AVIF/WebP. Nach dem ersten echten Deploy prüfen, ob die IMAGES-Bindung greift. (AVIF/WebP). Die Hero-Aufnahme
       wiegt als PNG gut 1,5 MB. Die `IMAGES`-Bindung in `wrangler.jsonc`
       übernimmt die Umrechnung auf Cloudflare — nach dem ersten Deploy mit
       Lighthouse gegenprüfen, ob sie tatsächlich greift.
 
-- [ ] **Barrierefreiheits-Durchlauf über alle Seiten und Zustände** — nicht nur
+- [x] **Barrierefreiheits-Durchlauf über alle Seiten und Zustände** — 10./11.10.2026 mit axe-core: 0 Verstöße auf allen Seiten, mobil und Desktop, inkl. Menü offen, Formularfehler, Kaufanfrage. — nicht nur
       die Startseite: Fehlerzustände der Formulare, Fokus, Hover, mobiles Menü.
       Ziel: axe ohne kritische oder ernste Befunde.
 
-- [ ] **Lighthouse mobil**: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95.
+- [x] **Lighthouse mobil**: Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95. Lokal auf der Cloudflare-Runtime am 11.10.2026: 96 / 100 / 100 / 100. Nach dem Livegang auf der echten Domain wiederholen.
 
 - [x] **Datum „Stand" in der Datenschutzerklärung** — steht als
-      `privacyPolicyDate` in `lib/site.ts` (26. August 2026). Bei jeder weiteren
+      `privacyPolicyDate` in `lib/site.ts` (10. Oktober 2026). Bei jeder weiteren
       inhaltlichen Änderung dort hochziehen.
 
-- [ ] **Fokusfalle im mobilen Menü.** Der Dialog hält den Tastaturfokus nicht;
+- [x] **Fokusfalle im mobilen Menü.** Erledigt am 10.10.2026: Tab/Shift+Tab bleiben im Dialog, Escape gibt den Fokus an „Menü“ zurück, Menüklick fokussiert den Zielabschnitt.
+      *(Ursprünglich:)* Der Dialog hält den Tastaturfokus nicht;
       nach dem letzten Menüpunkt springt er in den Hintergrund. Nach Escape
       landet er auf dem Dokumentkörper statt auf dem Menü-Button.
 
@@ -254,7 +278,7 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
 - [ ] `npm run lint`, `npm run typecheck`, `npm test` und `npm run build` laufen
       durch
 - [ ] Impressum vollständig, vom Kunden **schriftlich** bestätigt
-- [ ] Datenschutzerklärung vollständig, Hosting-Anbieter eingetragen
+- [ ] Datenschutzerklärung vollständig, Hosting-Anbieter eingetragen (Stand 10.10.2026 inkl. WhatsApp und Widerspruchsrecht; `privacyPolicyDate` am Livegangstag prüfen)
 - [ ] **Inkognito-Test:** Netzwerk-Tab zeigt beim ersten Seitenaufruf **keine**
       Requests an Drittdomains
 - [ ] Jeder in der Datenschutzerklärung genannte Dienst existiert wirklich im

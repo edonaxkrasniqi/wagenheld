@@ -12,6 +12,7 @@ const INVALID = 'Bitte prüfen Sie die markierten Felder.'
 
 /** Felder, deren Inhalt nach einem Fehler wieder ins Formular zurückgeht. */
 const echoedFields = [
+  'intent',
   'make',
   'makeOther',
   'model',

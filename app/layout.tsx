@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
 import { siteUrl, company, openingHours } from '@/lib/site'
+import { baseOpenGraph, siteDescription, siteTitle } from '@/lib/metadata'
 import { MobileNav } from '@/components/sections/MobileNav'
 
 const manrope = Manrope({
@@ -9,27 +10,15 @@ const manrope = Manrope({
   subsets: ['latin'],
 })
 
-const title = 'Automobilzentrum Wagenheld — Gebrauchtwagen in Bruchsal'
-const description =
-  'Sorgfältig ausgewählte Gebrauchtwagen in Bruchsal. Über 10 Jahre Erfahrung, Inzahlungnahme zu fairem Preis und Zulassung im Raum Karlsruhe.'
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title,
-  description,
-  alternates: { canonical: '/' },
-  openGraph: {
-    title,
-    description,
-    url: siteUrl,
-    siteName: company.shortName,
-    locale: 'de_DE',
-    type: 'website',
-  },
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: baseOpenGraph,
   twitter: {
     card: 'summary_large_image',
-    title,
-    description,
+    title: siteTitle,
+    description: siteDescription,
   },
 }
 
@@ -76,6 +65,19 @@ export default function RootLayout({
       className={`${manrope.variable} h-full antialiased scroll-smooth`}
     >
       <head>
+        {/*
+          Die Symbol-Schrift steht mit `font-display: block` in globals.css —
+          bis sie da ist, bleiben die Icons unsichtbar statt als Klartext
+          („directions_car“) aufzutauchen. Vorladen verkürzt dieses Fenster;
+          ohne Preload entdeckt der Browser die Datei erst über das CSS.
+        */}
+        <link
+          rel="preload"
+          href="/fonts/material-symbols-outlined.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         {/*
           Entsperrung der Reveal-Animation für Besucher ohne JavaScript.
 

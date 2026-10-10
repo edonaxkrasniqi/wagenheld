@@ -34,7 +34,10 @@ const contentSecurityPolicyReportOnly = [
   // niemandem. Wer hier etwas ergänzt, ergänzt es auch in der
   // Datenschutzerklärung.
   "connect-src 'self'",
-  'upgrade-insecure-requests',
+  // `upgrade-insecure-requests` stand hier früher. Im Report-Only-Modus wird
+  // die Direktive ignoriert und erzeugt nur eine Konsolenwarnung; HTTP→HTTPS
+  // erledigt Cloudflare („Always Use HTTPS"). In die scharfe Policy darf sie
+  // später wieder hinein.
 ].join('; ')
 
 const securityHeaders = [
@@ -43,8 +46,10 @@ const securityHeaders = [
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   {
     key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+    // `interest-cohort` (FLoC) ist von den Browsern aufgegeben und entfernt.
+    value: 'camera=(), microphone=(), geolocation=()',
   },
+  { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
   {
     key: 'Content-Security-Policy-Report-Only',
     value: contentSecurityPolicyReportOnly,
@@ -52,6 +57,8 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // Kein `X-Powered-By: Next.js` — verrät nur unnötig die Technik.
+  poweredByHeader: false,
   images: {
     // AVIF zuerst, WebP als Rückfall. Die Quelldateien liegen bereits als
     // WebP vor (zusammen unter 80 KB statt 2,4 MB PNG) — damit bleibt die

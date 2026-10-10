@@ -5,8 +5,9 @@ import { Footer } from '@/components/sections/Footer'
 import { company } from '@/lib/site'
 
 export const metadata: Metadata = {
+  // Kein eigenes `robots`: Next.js setzt auf der 404-Seite selbst `noindex`.
+  // Ein zweites Tag daneben wäre doppelt.
   title: `Seite nicht gefunden — ${company.shortName}`,
-  robots: { index: false, follow: true },
 }
 
 /**
@@ -21,7 +22,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col flex-1">
       <Header />
-      <main id="inhalt" className="bg-surface-lowest pt-16 flex-1">
+      <main id="inhalt" tabIndex={-1} className="bg-surface-lowest pt-16 flex-1 outline-none">
         <div className="max-w-[760px] mx-auto px-5 md:px-10 py-24 md:py-32">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-gold-ink mb-4">
             Fehler 404

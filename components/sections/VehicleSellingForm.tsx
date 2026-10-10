@@ -3,7 +3,6 @@
 import { useActionState, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { submitSellingForm } from '@/lib/actions'
-import { company } from '@/lib/site'
 import {
   otherVehicleMake,
   vehicleMakeOptions,
@@ -30,7 +29,7 @@ import type { FormState } from '@/lib/types'
  * Wer den Wert senkt, muss neu rechnen.
  */
 const inputClasses =
-  'w-full min-h-[52px] bg-warm/60 border border-warm-ink/50 rounded-xl px-4 py-3.5 text-base text-warm-ink placeholder:text-warm-muted hover:border-warm-ink/70 focus:border-gold-ink transition-colors'
+  'w-full min-h-[52px] bg-warm/60 border border-warm-ink/50 rounded-xl px-4 py-3.5 text-base text-warm-ink placeholder:text-warm-muted hover:border-warm-ink/70 focus:border-gold-ink aria-[invalid=true]:border-2 aria-[invalid=true]:border-red-700 transition-colors'
 
 /**
  * Das Markenfeld ist ein natives <select>. Bewusst keine nachgebaute Combobox:
@@ -94,6 +93,11 @@ export function VehicleSellingForm() {
   const [make, setMake] = useState<VehicleMakeOption | ''>('')
   const id = useId()
   const formRef = useRef<HTMLFormElement>(null)
+  const statusRef = useRef<HTMLParagraphElement>(null)
+  // Wer nach einem Fehler die Anfrageart wechselt, soll nicht mit den
+  // Meldungen der anderen Ansicht weiterarbeiten. Zurückgesetzt wird das mit
+  // der nächsten Antwort des Servers.
+  const [dismissed, setDismissed] = useState(false)
 
   // Nach jeder Antwort des Servers wird das Formular neu aufgebaut (`key`),
   // damit die `defaultValue`s sicher greifen: nach einem Fehler stehen die
@@ -105,6 +109,11 @@ export function VehicleSellingForm() {
   if (state !== lastState) {
     setLastState(state)
     setFormKey((key) => key + 1)
+    setDismissed(false)
+    // Die Antwort gehört zu der Anfrageart, die abgeschickt wurde — auch wenn
+    // währenddessen umgeschaltet wurde.
+    const echoedIntent = state?.values?.intent
+    if (echoedIntent === 'sell' || echoedIntent === 'buy') setIntent(echoedIntent)
     const echoedMake = state?.success ? '' : (state?.values?.make ?? '')
     setMake(
       (vehicleMakeOptions as readonly string[]).includes(echoedMake)
@@ -114,16 +123,27 @@ export function VehicleSellingForm() {
   }
 
   const values = state && !state.success ? (state.values ?? {}) : {}
-  const errors = state?.fieldErrors ?? {}
+  const errors = (!dismissed && state?.fieldErrors) || {}
+  const statusMessage = state && !dismissed ? state.message : ''
 
-  // Fokus auf das erste fehlerhafte Feld, damit niemand suchen muss, was
-  // nicht stimmt — und Screenreader die Meldung direkt am Feld vorlesen.
+  // Nach jeder Antwort einen definierten Fokus setzen. Das Formular wird per
+  // `key` neu aufgebaut; der Absendeknopf, der den Fokus hatte, existiert
+  // danach nicht mehr, und der Fokus fiele auf den Seitenkörper.
+  //   – Mit Feldfehlern: aufs erste fehlerhafte Feld, die Meldung hängt dort.
+  //   – Sonst (Erfolg, Versandfehler): auf die Statusmeldung.
   useEffect(() => {
-    if (!state?.fieldErrors) return
-    formRef.current
-      ?.querySelector<HTMLElement>('[aria-invalid="true"]')
-      ?.focus()
+    if (!state) return
+    const invalidField = formRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]'
+    )
+    if (invalidField) invalidField.focus()
+    else statusRef.current?.focus()
   }, [state])
+
+  const switchIntent = (value: FormIntent) => {
+    setIntent(value)
+    setDismissed(true)
+  }
 
   /** Gemeinsame Attribute je Feld: Wert, Fehlerzustand, Beschreibungen. */
   const field = (name: string, hintId?: string) => {
@@ -154,7 +174,8 @@ export function VehicleSellingForm() {
   const toggle = (value: FormIntent, label: string) => (
     <button
       type="button"
-      onClick={() => setIntent(value)}
+      onClick={() => switchIntent(value)}
+      disabled={pending}
       aria-pressed={intent === value}
       className={`rounded-full px-3 py-3 text-[0.75rem] font-bold uppercase tracking-wider transition-colors ${
         intent === value
@@ -399,19 +420,16 @@ export function VehicleSellingForm() {
             mitgeschickt bekommen (Trello #19) — ein Upload würde aber
             Ausweis- und Halterdaten auf dem Server ablegen und damit
             Rechtsgrundlage, Verschlüsselung, Speicherort und Löschfrist nach
-            sich ziehen. Der Hinweis auf die E-Mail erreicht dasselbe Ziel
-            ohne dieses Risiko.
+            sich ziehen. Auch die frühere Aufforderung, den Schein per E-Mail
+            nachzuschicken, ist entfallen: unverschlüsselte E-Mail ist für
+            Halterdaten der falsche Kanal, und die Datenschutzerklärung
+            (Abschnitt 5) rät genau davon ab. Beide Stellen müssen dasselbe
+            sagen.
           */
           <p className="sm:col-span-2 text-sm text-warm-muted leading-relaxed">
-            Sie haben den Fahrzeugschein zur Hand? Schicken Sie ihn uns gern im
-            Anschluss per E-Mail an{' '}
-            <a
-              href={`mailto:${company.email}?subject=${encodeURIComponent('Fahrzeugschein zu meiner Ankauf-Anfrage')}`}
-              className="text-gold-ink underline underline-offset-2 hover:no-underline break-words"
-            >
-              {company.email}
-            </a>
-            . Bitte laden Sie keine Ausweisdokumente über dieses Formular hoch.
+            Den Fahrzeugschein brauchen wir für die erste Einschätzung nicht.
+            Sollten wir Unterlagen benötigen, sprechen wir Sie an und stimmen
+            einen sicheren Weg ab. Bitte laden Sie keine Ausweisdokumente hoch.
           </p>
         )}
 
@@ -438,18 +456,6 @@ export function VehicleSellingForm() {
           </div>
         </div>
 
-        {state && (
-          <p
-            role="status"
-            aria-live="polite"
-            className={`sm:col-span-2 text-sm font-semibold ${
-              state.success ? 'text-gold-ink' : 'text-red-700'
-            }`}
-          >
-            {state.message}
-          </p>
-        )}
-
         <button
           type="submit"
           disabled={pending}
@@ -458,6 +464,24 @@ export function VehicleSellingForm() {
           {pending ? 'Wird gesendet…' : text.submit}
         </button>
       </form>
+
+      {/*
+        Statusmeldung bewusst AUSSERHALB des Formulars: das wird nach jeder
+        Antwort per `key` neu aufgebaut. Eine Live-Region, die schon mit Text
+        neu entsteht, sagen viele Screenreader nicht an — diese hier bleibt
+        dauerhaft im DOM und ändert nur ihren Inhalt.
+      */}
+      <p
+        ref={statusRef}
+        role="status"
+        aria-live="polite"
+        tabIndex={-1}
+        className={`mt-4 text-sm font-semibold outline-none ${
+          state?.success ? 'text-gold-ink' : 'text-red-700'
+        }`}
+      >
+        {statusMessage}
+      </p>
     </div>
   )
 }

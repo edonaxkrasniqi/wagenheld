@@ -9,8 +9,9 @@
 		"binding": "ASSETS"
 	},
 	// Bildoptimierung für next/image. Auf Workers gibt es kein `sharp` — die
-	// Umrechnung nach AVIF/WebP übernimmt diese Bindung. Ohne sie würde das
-	// Hero-PNG unverkleinert ausgeliefert (siehe GO-LIVE.md, Abschnitt C).
+	// Umrechnung nach AVIF/WebP übernimmt diese Bindung. Die Quellbilder liegen
+	// inzwischen selbst als WebP vor; ohne Bindung würden sie unskaliert, aber
+	// immer noch klein ausgeliefert (siehe GO-LIVE.md, Abschnitt C).
 	"images": {
 		"binding": "IMAGES"
 	},

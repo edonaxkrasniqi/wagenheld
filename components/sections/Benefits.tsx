@@ -16,7 +16,13 @@ export function Benefits() {
     <section
       id="leistungen"
       className="on-dark bg-anthracite border-t border-white/10 scroll-mt-16"
+      aria-labelledby="leistungen-titel"
     >
+      {/* Ziel des Menüpunkts „Leistungen" — ohne Überschrift wäre der
+          Abschnitt für Screenreader eine namenlose Liste. */}
+      <h2 id="leistungen-titel" className="sr-only">
+        Leistungen
+      </h2>
       <ul className="max-w-[1280px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-px bg-white/10">
         {benefits.map((benefit) => (
           <li

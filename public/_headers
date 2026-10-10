@@ -1,0 +1,17 @@
+# Cache-Regeln für die statischen Dateien auf Cloudflare Workers (Assets).
+#
+# Next.js versieht alles unter /_next/static/ mit einem Inhalts-Hash im
+# Dateinamen — eine geänderte Datei bekommt einen neuen Namen. Diese Dateien
+# dürfen deshalb ein Jahr im Browser-Cache liegen. Ohne diese Datei liefert
+# Cloudflare sie mit `max-age=0, must-revalidate` aus, und jeder Besuch fragt
+# jede Datei erneut an.
+#
+# Die Symbol-Schrift hat KEINEN Hash im Namen. Eine Woche ist ein Kompromiss:
+# wird das Subset geändert, sehen Wiederkehrer die neue Fassung spätestens nach
+# sieben Tagen. Wer das Subset tauscht, sollte die Datei umbenennen.
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=604800

@@ -13,6 +13,7 @@ export function Footer() {
             alt=""
             width={1149}
             height={867}
+            sizes="106px"
             className="h-20 w-auto mb-5"
           />
           <address className="not-italic text-sm leading-relaxed">

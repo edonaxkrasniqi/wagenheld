@@ -24,7 +24,9 @@ async function send(subject: string, replyTo: string, lines: string[]): Promise<
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     console.error(
-      `[mail] RESEND_API_KEY ist nicht gesetzt — Anfrage wurde NICHT versendet (${subject}).`
+      // Nur die Anfrageart, nicht der Betreff: der enthält den Namen des
+      // Absenders, und Formulardaten gehören nicht ins Log (siehe oben).
+      `[mail] RESEND_API_KEY ist nicht gesetzt — Anfrage wurde NICHT versendet (${subject.split(' von ')[0]}).`
     )
     return false
   }

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: `Impressum — ${company.shortName}`,
   description: 'Impressum und Anbieterkennzeichnung gemäß § 5 DDG.',
   robots: { index: false, follow: true },
+  alternates: { canonical: '/impressum' },
 }
 
 /**
@@ -21,7 +22,7 @@ export default function ImpressumPage() {
   return (
     <div className="flex flex-col flex-1">
       <Header />
-      <main id="inhalt" className="bg-surface-lowest pt-16 flex-1">
+      <main id="inhalt" tabIndex={-1} className="bg-surface-lowest pt-16 flex-1 outline-none">
         <div className="max-w-[760px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-10">
             Impressum

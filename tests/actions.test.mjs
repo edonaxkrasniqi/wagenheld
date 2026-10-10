@@ -70,4 +70,22 @@ describe('submitSellingForm – Fehler je Feld', () => {
     )
     assert.equal(state.values.evil, undefined)
   })
+
+  it('meldet einen leeren Kilometerstand als fehlend, nicht als „nicht positiv"', async () => {
+    const state = await submitSellingForm(null, formData({ ...validSell, mileage: '' }))
+    assert.match(state.fieldErrors.mileage, /Kilometerstand an/)
+  })
+
+  it('lehnt Zeilenumbrüche in einzeiligen Feldern ab (Mail-Betreff)', async () => {
+    const state = await submitSellingForm(
+      null,
+      formData({ ...validSell, name: 'Erika\r\nBcc: x@example.com' })
+    )
+    assert.ok(state.fieldErrors.name)
+  })
+
+  it('gibt die Anfrageart mit zurück', async () => {
+    const state = await submitSellingForm(null, formData({ ...validSell, email: 'x' }))
+    assert.equal(state.values.intent, 'sell')
+  })
 })

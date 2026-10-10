@@ -1,7 +1,7 @@
 import type { NavItem, FooterNavColumn } from '@/lib/types'
 
 export const navItems: NavItem[] = [
-  { label: 'Startseite', href: '/', active: true, icon: 'home' },
+  { label: 'Startseite', href: '/', icon: 'home' },
   { label: 'Fahrzeuge', href: '/#fahrzeuge', icon: 'directions_car' },
   { label: 'Ankauf', href: '/#ankauf', icon: 'sell' },
   { label: 'Leistungen', href: '/#leistungen', icon: 'handyman' },
@@ -18,7 +18,7 @@ export const footerNavColumns: FooterNavColumn[] = [
   {
     heading: 'Navigation',
     links: [
-      { label: 'Fahrzeuge auf mobile.de', href: '/#fahrzeuge' },
+      { label: 'Fahrzeugbestand', href: '/#fahrzeuge' },
       { label: 'Fahrzeug verkaufen', href: '/#ankauf' },
       { label: 'Leistungen', href: '/#leistungen' },
       { label: 'Über uns', href: '/#ueber-uns' },

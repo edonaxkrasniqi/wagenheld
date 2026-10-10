@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { navItems } from '@/content/nav'
 
 /**
@@ -12,6 +13,7 @@ import { navItems } from '@/content/nav'
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50)
@@ -42,27 +44,37 @@ export function Header() {
             alt=""
             width={1149}
             height={867}
+            // Dargestellt wird das Logo 48 px hoch, also rund 64 px breit.
+            // Ohne `sizes` lud der Browser die 1200-px-Fassung; ohne
+            // `priority` konkurriert es nicht mehr mit dem Hero-Bild.
+            sizes="64px"
             className={`w-auto transition-[height] duration-300 ${
               scrolled ? 'h-10' : 'h-12'
             }`}
-            priority
           />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8" aria-label="Hauptnavigation">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`text-sm font-semibold uppercase tracking-wider transition-colors ${
-                item.active
-                  ? 'text-white border-b-2 border-gold pb-1'
-                  : 'text-white/75 hover:text-gold'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            // Markiert wird nur, was wirklich die aktuelle Seite ist — vorher
+            // stand „Startseite" fest als aktiv, auch auf Impressum und
+            // Datenschutz. Abschnittsanker zählen nicht als eigene Seite.
+            const current = item.href === pathname
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                aria-current={current ? 'page' : undefined}
+                className={`text-sm font-semibold uppercase tracking-wider transition-colors ${
+                  current
+                    ? 'text-white border-b-2 border-gold pb-1'
+                    : 'text-white/75 hover:text-gold'
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
         </nav>
 
         <Link

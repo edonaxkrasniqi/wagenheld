@@ -38,8 +38,9 @@ export const aboutContent: AboutContent = {
   ],
   ctaLabel: 'Kontakt aufnehmen',
   imageUrl: '/images/ankauf.jpg',
-  imageAlt:
-    'Fahrzeugschlüssel auf einem Besprechungstisch im Automobilzentrum Wagenheld',
+  // Neutral beschrieben: Ob das Foto im Betrieb entstanden ist, ist nicht
+  // belegt — der Alternativtext soll nichts behaupten, was das Bild nicht zeigt.
+  imageAlt: 'Fahrzeugschlüssel auf einem Besprechungstisch',
 }
 
 /**

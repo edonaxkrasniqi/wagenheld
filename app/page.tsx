@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Header } from '@/components/sections/Header'
 import { Hero } from '@/components/sections/Hero'
 import { Benefits } from '@/components/sections/Benefits'
@@ -8,6 +9,13 @@ import { ContactBar } from '@/components/sections/ContactBar'
 import { Footer } from '@/components/sections/Footer'
 import { pageConfig } from '@/content/pageConfig'
 import type { SectionId } from '@/lib/types'
+import { baseOpenGraph } from '@/lib/metadata'
+import { siteUrl } from '@/lib/site'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  openGraph: { ...baseOpenGraph, url: siteUrl },
+}
 
 const sectionComponents: Record<SectionId, () => React.ReactNode> = {
   header: Header,
@@ -33,7 +41,7 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1">
       {hasHeader && <Header />}
-      <main id="inhalt" className="flex flex-col flex-1">
+      <main id="inhalt" tabIndex={-1} className="flex flex-col flex-1 outline-none">
         {mainIds.map((id) => {
           const Section = sectionComponents[id]
           return <Section key={id} />

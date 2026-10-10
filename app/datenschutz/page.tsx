@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   title: `Datenschutzerklärung — ${company.shortName}`,
   description: 'Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO.',
   robots: { index: false, follow: true },
+  alternates: { canonical: '/datenschutz' },
 }
 
 /**
@@ -30,7 +31,7 @@ export default function DatenschutzPage() {
   return (
     <div className="flex flex-col flex-1">
       <Header />
-      <main id="inhalt" className="bg-surface-lowest pt-16 flex-1">
+      <main id="inhalt" tabIndex={-1} className="bg-surface-lowest pt-16 flex-1 outline-none">
         <div className="max-w-[760px] mx-auto px-5 md:px-10 py-16 md:py-24">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-10">
             Datenschutzerklärung
@@ -184,8 +185,18 @@ export default function DatenschutzPage() {
                 beantworten zu können. Eine gesonderte Einwilligung holen wir
                 dafür nicht ein — das Kästchen im Formular bestätigt lediglich,
                 dass Sie diese Hinweise zur Kenntnis genommen haben. Sie können
-                der Verarbeitung nach Art. 21 DSGVO widersprechen; Ihre Anfrage
-                lässt sich dann allerdings nicht mehr bearbeiten.
+                Ihre Anfrage jederzeit zurückziehen und die Löschung Ihrer
+                Angaben verlangen (Art. 17 DSGVO).
+              </p>
+              {/*
+                Früher stand hier ein Widerspruchsrecht nach Art. 21 DSGVO. Das
+                gilt aber nur für Verarbeitungen nach lit. e oder f — nicht für
+                lit. b. Der Satz war rechtlich falsch und widersprach Ziffer 11.
+              */}
+              <p className="mt-2">
+                Das Formular wird von unserem Hosting-Anbieter (Ziffer 3)
+                entgegengenommen und verarbeitet, der Ihre Angaben an den
+                Versanddienst übergibt.
               </p>
               <p className="mt-2">
                 Der technische Versand erfolgt über {processors.mailDelivery.brand}
@@ -293,10 +304,11 @@ export default function DatenschutzPage() {
                 Ihre Telefonnummer, Zeitpunkte und Geräteangaben verarbeitet der
                 Anbieter jedoch in eigener Verantwortung; dabei kann es zu einer
                 Übermittlung an die {messenger.parent} in den Vereinigten Staaten
-                kommen. {messenger.parent} ist nach dem EU-US Data Privacy
-                Framework zertifiziert; die Übermittlung stützt sich auf den
-                Angemessenheitsbeschluss der Europäischen Kommission nach Art. 45
-                DSGVO. Einzelheiten finden Sie in der{' '}
+                kommen. Nach Angaben des Anbieters ist {messenger.parent} nach dem
+                EU-US Data Privacy Framework zertifiziert, sodass sich die
+                Übermittlung auf den Angemessenheitsbeschluss der Europäischen
+                Kommission nach Art. 45 DSGVO stützt. Einzelheiten finden Sie in
+                der{' '}
                 <a
                   href={messenger.privacyUrl}
                   target="_blank"

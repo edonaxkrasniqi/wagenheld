@@ -31,22 +31,35 @@ const consentSchema = z.literal('on', {
  * Obergrenze könnte jemand ein Megabyte Text in den Betreff der Mail schieben.
  * Die Werte sind großzügig genug, dass sie niemanden echten treffen.
  */
+/**
+ * Einzeilige Felder dürfen keinen Zeilenumbruch enthalten. Name und Modell
+ * landen im Betreff der Benachrichtigungs-Mail; ein per manipuliertem POST
+ * eingeschleustes CR/LF hätte dort nichts verloren — egal, ob der Versand-
+ * dienst es abfängt.
+ */
+const singleLine = /^[^\r\n]*$/
+const SINGLE_LINE_MESSAGE = 'Bitte ohne Zeilenumbruch angeben'
+
 const nameSchema = z
   .string()
   .trim()
-  .min(2, 'Name ist erforderlich')
+  .min(1, 'Bitte geben Sie Ihren Namen an')
+  .min(2, 'Bitte den vollständigen Namen angeben')
   .max(100, 'Bitte den Namen kürzer angeben')
+  .regex(singleLine, SINGLE_LINE_MESSAGE)
 
 const emailSchema = z
   .string()
   .trim()
+  .min(1, 'Bitte geben Sie Ihre E-Mail-Adresse an')
   .max(254, 'Die E-Mail-Adresse ist zu lang')
-  .email('Ungültige E-Mail-Adresse')
+  .email('Bitte eine gültige E-Mail-Adresse angeben, z. B. name@beispiel.de')
 
 const phoneSchema = z
   .string()
   .trim()
   .max(40, 'Bitte die Telefonnummer kürzer angeben')
+  .regex(singleLine, SINGLE_LINE_MESSAGE)
   .optional()
 
 
@@ -56,7 +69,10 @@ const phoneSchema = z
  */
 const firstRegistrationSchema = z
   .string()
+  .trim()
   .regex(/^\d{2}\.\d{2}\.\d{4}$/, 'Erstzulassung bitte als TT.MM.JJJJ angeben')
+  // Zwei getrennte Prüfungen, damit die Meldung sagt, was wirklich falsch
+  // ist: „31.02.2018" gibt es nicht — das ist kein Datum „in der Zukunft".
   .refine((value) => {
     const [day, month, year] = value.split('.').map(Number)
     const date = new Date(year, month - 1, day)
@@ -64,10 +80,13 @@ const firstRegistrationSchema = z
       date.getFullYear() === year &&
       date.getMonth() === month - 1 &&
       date.getDate() === day &&
-      year >= 1900 &&
-      date.getTime() <= Date.now()
+      year >= 1900
     )
-  }, 'Bitte ein gültiges Datum angeben, das nicht in der Zukunft liegt')
+  }, 'Dieses Datum gibt es nicht — bitte prüfen')
+  .refine((value) => {
+    const [day, month, year] = value.split('.').map(Number)
+    return new Date(year, month - 1, day).getTime() <= Date.now()
+  }, 'Die Erstzulassung kann nicht in der Zukunft liegen')
 
 /**
  * Die Marke kommt aus einem Dropdown, deshalb `z.enum` statt Freitext: der
@@ -88,6 +107,7 @@ const otherMakeSchema = z
   .string()
   .trim()
   .max(60, 'Bitte die Marke etwas kürzer angeben')
+  .regex(singleLine, SINGLE_LINE_MESSAGE)
   .optional()
 
 /** Wer ein Fahrzeug anbietet, liefert die Eckdaten mit. */
@@ -95,13 +115,26 @@ export const sellingFormSchema = z
   .object({
     make: makeSchema,
     makeOther: otherMakeSchema,
-    model: z.string().trim().min(1, 'Modell ist erforderlich').max(80, 'Bitte das Modell kürzer angeben'),
+    model: z
+      .string()
+      .trim()
+      .min(1, 'Bitte geben Sie das Modell an')
+      .max(80, 'Bitte das Modell kürzer angeben')
+      .regex(singleLine, SINGLE_LINE_MESSAGE),
     firstRegistration: firstRegistrationSchema,
-    mileage: z.coerce
-      .number({ error: 'Kilometerstand muss eine Zahl sein' })
-      .int()
-      .positive('Kilometerstand muss positiv sein')
-      .max(2_000_000, 'Bitte den Kilometerstand prüfen'),
+    // Leeres Feld zuerst abfangen: `z.coerce` machte aus "" die Zahl 0 und
+    // meldete dann „muss positiv sein" — für ein leeres Feld irreführend.
+    mileage: z
+      .string()
+      .trim()
+      .min(1, 'Bitte geben Sie den Kilometerstand an')
+      .pipe(
+        z.coerce
+          .number<string>({ error: 'Bitte nur Ziffern angeben, z. B. 128000' })
+          .int('Bitte ganze Kilometer angeben')
+          .positive('Der Kilometerstand muss größer als 0 sein')
+          .max(2_000_000, 'Bitte den Kilometerstand prüfen')
+      ),
     name: nameSchema,
     email: emailSchema,
     phone: phoneSchema,

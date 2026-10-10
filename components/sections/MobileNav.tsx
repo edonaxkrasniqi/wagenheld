@@ -92,6 +92,32 @@ export function MobileNav() {
     toggleRef.current?.focus()
   }
 
+  /**
+   * Klick auf einen Menüpunkt. Die Schublade wird beim Schließen `inert` — der
+   * fokussierte Link darin verliert damit den Fokus, und er fiele auf den
+   * Seitenkörper. Bei Ankern auf derselben Seite (fast alle Menüpunkte) setzt
+   * Next.js keinen Fokus, also übernehmen wir das: auf den Zielabschnitt, oder
+   * ersatzweise zurück auf den Menü-Knopf. Führt der Link auf eine andere
+   * Seite, schließt der Pfadwechsel oben die Schublade.
+   */
+  const navigate = (href: string) => {
+    setOpen(false)
+    const [path, hash] = href.split('#')
+    if ((path || '/') !== pathname) return
+
+    requestAnimationFrame(() => {
+      const target = hash ? document.getElementById(hash) : null
+      if (!target) {
+        toggleRef.current?.focus()
+        return
+      }
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      // Gescrollt wird schon durch den Link; der Fokus soll nicht dagegen
+      // anspringen.
+      target.focus({ preventScroll: true })
+    })
+  }
+
   const barItem =
     'flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.65rem] font-semibold tracking-wide text-white/70 transition-colors hover:text-gold'
 
@@ -174,7 +200,7 @@ export function MobileNav() {
             <li key={item.label}>
               <Link
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() => navigate(item.href)}
                 className="flex items-center gap-4 rounded px-4 py-3.5 text-sm font-semibold text-on-surface-variant transition-colors hover:bg-surface-high hover:text-on-surface"
               >
                 <Icon name={item.icon ?? 'circle'} className="text-xl" />
@@ -197,7 +223,7 @@ export function MobileNav() {
           </a>
           <Link
             href="/#ankauf"
-            onClick={() => setOpen(false)}
+            onClick={() => navigate('/#ankauf')}
             className="flex items-center justify-center rounded-lg bg-secondary-container px-6 py-3.5 text-sm font-bold uppercase tracking-wider text-on-secondary-container transition-colors hover:bg-secondary-fixed"
           >
             Fahrzeug anbieten
