@@ -422,9 +422,7 @@ export function VehicleSellingForm() {
             Rechtsgrundlage, Verschlüsselung, Speicherort und Löschfrist nach
             sich ziehen. Auch die frühere Aufforderung, den Schein per E-Mail
             nachzuschicken, ist entfallen: unverschlüsselte E-Mail ist für
-            Halterdaten der falsche Kanal, und die Datenschutzerklärung
-            (Abschnitt 5) rät genau davon ab. Beide Stellen müssen dasselbe
-            sagen.
+            Halterdaten der falsche Kanal.
           */
           <p className="sm:col-span-2 text-sm text-warm-muted leading-relaxed">
             Den Fahrzeugschein brauchen wir für die erste Einschätzung nicht.

@@ -71,8 +71,9 @@ in den Seiten.
 
 - [x] **WhatsApp-Kontakt** eingebaut am 10.10.2026: `wa.me/491791596072`
       (dieselbe Mobilnummer). Link, kein Widget — überträgt nichts vor dem
-      Klick. Datenschutzerklärung Ziffer 7. **Offen beim Kunden:** dass er
-      WhatsApp Business (App) nutzt, wie im Text angegeben.
+      Klick. Datenschutzerklärung Ziffer 3.1. **Offen beim Kunden:** dass er
+      WhatsApp Business (App) nutzt und das Firmenhandy nur Kontakte enthält,
+      die selbst geschrieben haben — beides sagt der Kanzlei-Text zu.
 
 - [ ] **Garantie: Garantiegeber, Deckungsumfang und Kosten.**
       Auf der Seite steht „Optional bis 36 Monate". § 479 BGB verlangt, dass
@@ -200,11 +201,9 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
       für denselben Header laufen auseinander.
 - [ ] SSL/TLS-Modus auf **Full (strict)**.
 - [ ] **Bot Fight Mode ausgeschaltet lassen.** Er setzt das Cookie `__cf_bm`.
-      Ziffer 8 der Datenschutzerklärung sagt zu, dass keine Cookies zu
-      Analyse- oder Marketingzwecken gesetzt werden und keine Dienste Daten
-      vor einer Einwilligung übertragen; tatsächlich setzt die Seite heute
-      gar keine Cookies. Das soll so bleiben — jedes neue Cookie gehört
-      vorher in die Erklärung.
+      Die Seite setzt heute kein einziges Cookie, und die Kanzlei-Erklärung
+      enthält keinen Cookie-Abschnitt. Das soll so bleiben — jedes neue
+      Cookie gehört vorher (über das Kanzlei-Portal) in die Erklärung.
 - [ ] **Web Analytics nur ohne Cookies** einsetzen — und dann in die
       Datenschutzerklärung aufnehmen. Im Zweifel weglassen.
 - [ ] **Rate-Limiting-Regel** für die Formular-POSTs auf `/` anlegen
@@ -278,7 +277,18 @@ Cloudflare-Account der Agentur. Der Build läuft über `@opennextjs/cloudflare`
 - [ ] `npm run lint`, `npm run typecheck`, `npm test` und `npm run build` laufen
       durch
 - [ ] Impressum vollständig, vom Kunden **schriftlich** bestätigt
-- [ ] Datenschutzerklärung vollständig, Hosting-Anbieter eingetragen (Stand 10.10.2026 inkl. WhatsApp und Widerspruchsrecht; `privacyPolicyDate` am Livegangstag prüfen)
+- [ ] **Datenschutzerklärung (Kanzlei-Text, Stand 10.10.2026) im Kanzlei-Portal
+      nachziehen**, Entscheidung des Kunden vom 11.10.2026. Der Text wird
+      unverändert eingesetzt (`content/datenschutzKanzlei.ts`). Abgleich mit
+      dem Code, Stand 11.10.:
+      - **fehlt:** Hosting über Cloudflare (Server-Logfiles laufen dort, nicht
+        auf „unserem" Server), Formularversand über Resend (USA), Postfach
+        bei IONOS
+      - **zu viel:** „Google Kundenrezensionen" (Ziffer 4) — das Programm wird
+        nicht genutzt; eine Erklärung, die nicht stattfindende Verarbeitungen
+        beschreibt, ist selbst fehlerhaft
+      - Danach neu erzeugen und das HTML in `content/datenschutzKanzlei.ts`
+        ersetzen.
 - [ ] **Inkognito-Test:** Netzwerk-Tab zeigt beim ersten Seitenaufruf **keine**
       Requests an Drittdomains
 - [ ] Jeder in der Datenschutzerklärung genannte Dienst existiert wirklich im

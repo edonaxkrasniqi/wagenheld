@@ -16,9 +16,9 @@ import { otherVehicleMake, vehicleMakeOptions } from '@/content/vehicleMakes'
  * DSGVO zur Kenntnis genommen wurden. Vorab-Ankreuzen bleibt unzulässig.
  *
  * Wer den Text hier ändert, ändert ihn auch in
- * `components/sections/VehicleSellingForm.tsx`, in `lib/mail.ts` und in
- * Abschnitt 5 der Datenschutzerklärung. Die vier Stellen müssen dasselbe
- * sagen.
+ * `components/sections/VehicleSellingForm.tsx` und in `lib/mail.ts`. Die
+ * Datenschutzerklärung (Kanzlei-Text, Ziffer 3.2) nennt für Formulare lit. f
+ * und ergänzend lit. b — das passt zu dieser Einordnung.
  */
 const consentSchema = z.literal('on', {
   error: 'Bitte bestätigen Sie die Datenschutzhinweise',

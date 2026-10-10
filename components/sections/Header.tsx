@@ -48,6 +48,8 @@ export function Header() {
             // Ohne `sizes` lud der Browser die 1200-px-Fassung; ohne
             // `priority` konkurriert es nicht mehr mit dem Hero-Bild.
             sizes="64px"
+            // Sichtbar ab dem ersten Bild — nicht lazy nachladen.
+            loading="eager"
             className={`w-auto transition-[height] duration-300 ${
               scrolled ? 'h-10' : 'h-12'
             }`}
