@@ -18,7 +18,7 @@ export function InventoryPanel() {
     >
       <div className="relative h-52 shrink-0 md:h-64">
         <Image
-          src="/images/Innenansicht.png"
+          src="/images/innenansicht.webp"
           alt=""
           aria-hidden="true"
           fill

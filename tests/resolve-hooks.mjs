@@ -39,7 +39,14 @@ registerHooks({
       return nextResolve(url.href, context)
     }
 
-    if (specifier.startsWith('.') && context.parentURL) {
+    // Nur projekteigene Dateien — Pakete unter node_modules lösen ihre
+    // relativen Importe selbst auf (CommonJS ergänzt `.js` eigenständig).
+    // Ein Umschreiben hier hätte z. B. `resend` → `standardwebhooks` zerlegt.
+    if (
+      specifier.startsWith('.') &&
+      context.parentURL &&
+      !context.parentURL.includes('/node_modules/')
+    ) {
       const url = withExtension(new URL(specifier, context.parentURL))
       return nextResolve(url.href, context)
     }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import './globals.css'
-import { siteUrl, company } from '@/lib/site'
+import { siteUrl, company, openingHours } from '@/lib/site'
 import { MobileNav } from '@/components/sections/MobileNav'
 
 const manrope = Manrope({
@@ -34,9 +34,11 @@ export const metadata: Metadata = {
 }
 
 /**
- * Strukturierte Daten für Google. Enthält ausschließlich Angaben, die vom
- * Kunden bestätigt sind. Öffnungszeiten und Bewertungen fehlen bewusst —
- * erfundene Werte hier wären genauso angreifbar wie auf der Seite selbst.
+ * Strukturierte Daten für Google. Enthält ausschließlich belegte Angaben —
+ * die Öffnungszeiten stammen aus dem Google-Profil des Betriebs (siehe
+ * lib/site.ts). Bewertungen fehlen bewusst: selbst ausgezeichnete Sterne
+ * wertet Google bei lokalen Unternehmen ohnehin nicht aus, und erfundene Werte
+ * wären genauso angreifbar wie auf der Seite selbst.
  */
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -52,6 +54,14 @@ const jsonLd = {
     addressLocality: company.city,
     addressCountry: company.country,
   },
+  openingHoursSpecification: openingHours
+    .filter((entry) => entry.opens && entry.closes)
+    .map((entry) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: entry.days,
+      opens: entry.opens,
+      closes: entry.closes,
+    })),
   sameAs: [company.mobileDeUrl],
 }
 

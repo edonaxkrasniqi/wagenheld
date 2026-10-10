@@ -95,4 +95,17 @@ export interface HeroContent {
 export type FormState = {
   success: boolean
   message: string
+  /**
+   * Fehlermeldung je Feldname. Das Formular hängt sie per
+   * `aria-describedby` an das jeweilige Feld und setzt `aria-invalid` —
+   * eine Sammelmeldung über dem Knopf sagt Screenreader-Nutzern nicht, *wo*
+   * der Fehler steckt.
+   */
+  fieldErrors?: Record<string, string>
+  /**
+   * Die abgeschickten Eingaben, damit sie nach einem Fehler nicht verloren
+   * gehen. React setzt ein Formular nach jeder Server Action zurück; ohne
+   * diese Werte müsste man nach einem Tippfehler im Datum alles neu eingeben.
+   */
+  values?: Record<string, string>
 } | null

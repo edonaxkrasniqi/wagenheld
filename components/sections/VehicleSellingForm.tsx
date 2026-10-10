@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useId, useState } from 'react'
+import { useActionState, useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { submitSellingForm } from '@/lib/actions'
 import { company } from '@/lib/site'
@@ -93,6 +93,56 @@ export function VehicleSellingForm() {
   // `required` greift. Der Zustand steuert nur, ob das Freitextfeld erscheint.
   const [make, setMake] = useState<VehicleMakeOption | ''>('')
   const id = useId()
+  const formRef = useRef<HTMLFormElement>(null)
+
+  // Nach jeder Antwort des Servers wird das Formular neu aufgebaut (`key`),
+  // damit die `defaultValue`s sicher greifen: nach einem Fehler stehen die
+  // eingegebenen Werte wieder drin, nach dem Erfolg ist es leer. Angepasst
+  // wird während des Renderns — Reacts vorgesehener Weg, auf einen geänderten
+  // Wert zu reagieren, ohne einen zweiten Renderdurchlauf per Effekt.
+  const [lastState, setLastState] = useState<FormState>(initialState)
+  const [formKey, setFormKey] = useState(0)
+  if (state !== lastState) {
+    setLastState(state)
+    setFormKey((key) => key + 1)
+    const echoedMake = state?.success ? '' : (state?.values?.make ?? '')
+    setMake(
+      (vehicleMakeOptions as readonly string[]).includes(echoedMake)
+        ? (echoedMake as VehicleMakeOption)
+        : ''
+    )
+  }
+
+  const values = state && !state.success ? (state.values ?? {}) : {}
+  const errors = state?.fieldErrors ?? {}
+
+  // Fokus auf das erste fehlerhafte Feld, damit niemand suchen muss, was
+  // nicht stimmt — und Screenreader die Meldung direkt am Feld vorlesen.
+  useEffect(() => {
+    if (!state?.fieldErrors) return
+    formRef.current
+      ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+      ?.focus()
+  }, [state])
+
+  /** Gemeinsame Attribute je Feld: Wert, Fehlerzustand, Beschreibungen. */
+  const field = (name: string, hintId?: string) => {
+    const errorId = errors[name] ? `${id}-${name}-error` : undefined
+    const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined
+    return {
+      name,
+      defaultValue: values[name],
+      'aria-invalid': errors[name] ? (true as const) : undefined,
+      'aria-describedby': describedBy,
+    }
+  }
+
+  const fieldError = (name: string) =>
+    errors[name] ? (
+      <p id={`${id}-${name}-error`} className="mt-2 text-sm font-semibold text-red-700">
+        {errors[name]}
+      </p>
+    ) : null
 
   const text = copy[intent]
   const needsOtherMake = make === otherVehicleMake
@@ -135,7 +185,12 @@ export function VehicleSellingForm() {
         {toggle('buy', 'Ich möchte kaufen')}
       </div>
 
-      <form action={formAction} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <form
+        key={formKey}
+        ref={formRef}
+        action={formAction}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+      >
         {/* Honeypot: echte Besucher sehen und füllen dieses Feld nie. */}
         <input
           type="text"
@@ -164,9 +219,9 @@ export function VehicleSellingForm() {
               <div className="relative">
                 <select
                   id={`${id}-make`}
-                  name="make"
+                  {...field('make')}
                   required
-                  value={make}
+                  defaultValue={make}
                   onChange={(event) =>
                     setMake(event.target.value as VehicleMakeOption | '')
                   }
@@ -185,6 +240,7 @@ export function VehicleSellingForm() {
                 </select>
                 <SelectChevron />
               </div>
+              {fieldError('make')}
 
               {/*
                 Nur im Bedarfsfall im DOM — und damit auch nur dann im
@@ -198,13 +254,14 @@ export function VehicleSellingForm() {
                   </label>
                   <input
                     id={`${id}-make-other`}
-                    name="makeOther"
+                    {...field('makeOther')}
                     required
                     maxLength={60}
                     autoComplete="off"
                     placeholder="z. B. Alfa Romeo"
                     className={inputClasses}
                   />
+                  {fieldError('makeOther')}
                 </div>
               )}
             </div>
@@ -215,12 +272,14 @@ export function VehicleSellingForm() {
               </label>
               <input
                 id={`${id}-model`}
-                name="model"
+                {...field('model')}
                 required
+                maxLength={80}
                 autoComplete="off"
                 placeholder="z. B. Golf VII"
                 className={inputClasses}
               />
+              {fieldError('model')}
             </div>
 
             {/*
@@ -235,17 +294,18 @@ export function VehicleSellingForm() {
               </label>
               <input
                 id={`${id}-ez`}
-                name="firstRegistration"
+                {...field('firstRegistration', `${id}-ez-hint`)}
                 required
                 inputMode="numeric"
                 placeholder="TT.MM.JJJJ"
                 pattern="\d{2}\.\d{2}\.\d{4}"
-                aria-describedby={`${id}-ez-hint`}
+                title="Bitte als TT.MM.JJJJ angeben, z. B. 01.03.2018"
                 className={inputClasses}
               />
               <p id={`${id}-ez-hint`} className="mt-2 text-sm text-warm-muted">
                 Steht im Fahrzeugschein unter Punkt B.
               </p>
+              {fieldError('firstRegistration')}
             </div>
 
             <div>
@@ -254,14 +314,16 @@ export function VehicleSellingForm() {
               </label>
               <input
                 id={`${id}-mileage`}
-                name="mileage"
+                {...field('mileage')}
                 type="number"
                 min="1"
+                max="2000000"
                 required
                 inputMode="numeric"
                 placeholder="z. B. 128000"
                 className={inputClasses}
               />
+              {fieldError('mileage')}
             </div>
           </>
         ) : (
@@ -271,15 +333,17 @@ export function VehicleSellingForm() {
             </label>
             <textarea
               id={`${id}-message`}
-              name="message"
+              {...field('message', `${id}-message-hint`)}
               required
+              maxLength={2000}
               rows={5}
               placeholder="z. B. Kombi, Automatik, bis 20.000 € — oder einfach, was Ihnen wichtig ist."
               className={`${inputClasses} resize-y`}
             />
-            <p className="mt-2 text-sm text-warm-muted">
+            <p id={`${id}-message-hint`} className="mt-2 text-sm text-warm-muted">
               Sie müssen sich noch nicht festlegen. Ein paar Stichworte genügen.
             </p>
+            {fieldError('message')}
           </div>
         )}
 
@@ -289,11 +353,13 @@ export function VehicleSellingForm() {
           </label>
           <input
             id={`${id}-name`}
-            name="name"
+            {...field('name')}
             required
+            maxLength={100}
             autoComplete="name"
             className={inputClasses}
           />
+          {fieldError('name')}
         </div>
 
         <div>
@@ -302,12 +368,14 @@ export function VehicleSellingForm() {
           </label>
           <input
             id={`${id}-email`}
-            name="email"
+            {...field('email')}
             type="email"
             required
+            maxLength={254}
             autoComplete="email"
             className={inputClasses}
           />
+          {fieldError('email')}
         </div>
 
         <div className="sm:col-span-2">
@@ -316,11 +384,13 @@ export function VehicleSellingForm() {
           </label>
           <input
             id={`${id}-phone`}
-            name="phone"
+            {...field('phone')}
             type="tel"
+            maxLength={40}
             autoComplete="tel"
             className={inputClasses}
           />
+          {fieldError('phone')}
         </div>
 
         {intent === 'sell' && (
@@ -351,15 +421,21 @@ export function VehicleSellingForm() {
             name="consent"
             type="checkbox"
             required
+            defaultChecked={values.consent === 'on'}
+            aria-invalid={errors.consent ? true : undefined}
+            aria-describedby={errors.consent ? `${id}-consent-error` : undefined}
             className="mt-0.5 h-5 w-5 shrink-0 accent-warm-ink"
           />
-          <label htmlFor={`${id}-consent`} className="text-sm text-warm-muted leading-relaxed">
-            Ich habe die{' '}
-            <Link href="/datenschutz" className="text-gold-ink underline underline-offset-2 hover:no-underline">
-              Datenschutzerklärung
-            </Link>{' '}
-            zur Kenntnis genommen.
-          </label>
+          <div>
+            <label htmlFor={`${id}-consent`} className="text-sm text-warm-muted leading-relaxed">
+              Ich habe die{' '}
+              <Link href="/datenschutz" className="text-gold-ink underline underline-offset-2 hover:no-underline">
+                Datenschutzerklärung
+              </Link>{' '}
+              zur Kenntnis genommen.
+            </label>
+            {fieldError('consent')}
+          </div>
         </div>
 
         {state && (

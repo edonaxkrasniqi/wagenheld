@@ -28,7 +28,7 @@ const contentSecurityPolicyReportOnly = [
   "script-src 'self' 'unsafe-inline'",
   // Tailwind erzeugt Klassen, Next.js setzt daneben Inline-Styles.
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://lh3.googleusercontent.com",
+  "img-src 'self' data: blob:",
   "font-src 'self'",
   // Server Actions posten auf dieselbe Herkunft; sonst spricht die Seite mit
   // niemandem. Wer hier etwas ergänzt, ergänzt es auch in der
@@ -53,13 +53,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-        pathname: '/aida-public/**',
-      },
-    ],
+    // AVIF zuerst, WebP als Rückfall. Die Quelldateien liegen bereits als
+    // WebP vor (zusammen unter 80 KB statt 2,4 MB PNG) — damit bleibt die
+    // Seite auch dann leicht, wenn die IMAGES-Bindung auf Cloudflare einmal
+    // nicht greift. Externe Bildquellen gibt es keine mehr; die früheren
+    // Platzhalter von googleusercontent.com sind entfernt.
+    formats: ['image/avif', 'image/webp'],
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]

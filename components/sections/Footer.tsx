@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { footerNavColumns } from '@/content/nav'
-import { company } from '@/lib/site'
+import { company, openingHours } from '@/lib/site'
 
 export function Footer() {
   return (
@@ -30,12 +30,33 @@ export function Footer() {
             </a>
             <br />
             <a
+              href={company.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gold transition-colors"
+            >
+              WhatsApp<span className="sr-only"> (öffnet WhatsApp in neuem Fenster)</span>
+            </a>
+            <br />
+            <a
               href={`mailto:${company.email}`}
               className="hover:text-gold transition-colors break-words"
             >
               {company.email}
             </a>
           </address>
+
+          <h2 className="text-white text-sm font-bold uppercase tracking-wider mt-8 mb-3">
+            Öffnungszeiten
+          </h2>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
+            {openingHours.map((entry) => (
+              <div key={entry.label} className="contents">
+                <dt>{entry.label}</dt>
+                <dd>{entry.hours}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         {footerNavColumns.map((column) => (

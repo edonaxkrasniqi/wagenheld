@@ -6,7 +6,7 @@ export function ContactBar() {
     <section id="kontakt" className="bg-secondary-container scroll-mt-24">
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-14">
         <h2 className="sr-only">Kontakt</h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {contactItems.map((item) => {
             const content = (
               <>
@@ -41,6 +41,9 @@ export function ContactBar() {
                     className="flex items-start gap-4 rounded hover:opacity-80 transition-opacity"
                   >
                     {content}
+                    {item.external && (
+                      <span className="sr-only"> (öffnet in neuem Fenster)</span>
+                    )}
                   </a>
                 ) : (
                   <span className="flex items-start gap-4">{content}</span>

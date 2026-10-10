@@ -1,4 +1,5 @@
 import type { AboutContent, ContactItem, HeroContent } from '@/lib/types'
+import { company, openingHoursShort } from '@/lib/site'
 
 /**
  * Alle Angaben stammen aus den Kundenkarten im Trello-Board "Wagenheld"
@@ -22,7 +23,7 @@ export const heroContent: HeroContent = {
     'Sorgfältig ausgewählte Gebrauchtwagen. Persönliche Beratung. Über 10 Jahre Erfahrung im Automobilhandel.',
   primaryCta: { label: 'Fahrzeuge ansehen', href: '#fahrzeuge' },
   secondaryCta: { label: 'Fahrzeug verkaufen', href: '#ankauf' },
-  imageUrl: '/images/Header_final.png',
+  imageUrl: '/images/hero-front.webp',
   imageAlt:
     'Front einer dunklen Limousine vor schwarzem Hintergrund, beleuchtet vom eigenen Tagfahrlicht',
 }
@@ -41,25 +42,41 @@ export const aboutContent: AboutContent = {
     'Fahrzeugschlüssel auf einem Besprechungstisch im Automobilzentrum Wagenheld',
 }
 
-// OFFEN (Ari): Öffnungszeiten sind bislang nicht geliefert worden. Deshalb
-// steht hier keine Kachel dazu — geraten wird nicht.
+/**
+ * Kontaktwege in der Reihenfolge, in der Besucher sie nutzen: Anruf und
+ * WhatsApp zuerst, weil ein Autokauf fast immer mit einer kurzen Frage
+ * beginnt. Werte kommen aus lib/site.ts, damit Telefonnummer und Zeiten nicht
+ * an mehreren Stellen auseinanderlaufen.
+ */
 export const contactItems: ContactItem[] = [
   {
     icon: 'call',
     label: 'Anrufen',
-    value: '0179 1596072',
-    href: 'tel:+491791596072',
+    value: company.phone,
+    href: company.phoneHref,
+  },
+  {
+    icon: 'chat',
+    label: 'WhatsApp',
+    value: 'Nachricht schreiben',
+    href: company.whatsappHref,
+    external: true,
   },
   {
     icon: 'mail',
     label: 'E-Mail schreiben',
-    value: 'info@automobilzentrum-wagenheld.de',
-    href: 'mailto:info@automobilzentrum-wagenheld.de',
+    value: company.email,
+    href: `mailto:${company.email}`,
+  },
+  {
+    icon: 'schedule',
+    label: 'Öffnungszeiten',
+    value: openingHoursShort,
   },
   {
     icon: 'location_on',
     label: 'Vor Ort',
-    value: 'Im Schollengarten 14, 76646 Bruchsal',
+    value: `${company.street}, ${company.postalCode} ${company.city}`,
     href: 'https://www.openstreetmap.org/search?query=Im%20Schollengarten%2014%2C%2076646%20Bruchsal',
     external: true,
   },
@@ -67,7 +84,7 @@ export const contactItems: ContactItem[] = [
     icon: 'directions_car',
     label: 'Fahrzeugbestand',
     value: 'Tagesaktuell auf mobile.de',
-    href: 'https://home.mobile.de/AUTOMOBILZENTRUMWAGENHELDGBR',
+    href: company.mobileDeUrl,
     external: true,
   },
 ]

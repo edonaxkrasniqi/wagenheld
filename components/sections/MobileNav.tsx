@@ -24,6 +24,7 @@ export function MobileNav() {
 
   const toggleRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
 
   // Zustand während des Renderns anpassen — Reacts vorgesehener Weg für einen
   // Effekt, der nur auf einen geänderten Wert reagiert. Schließt die
@@ -37,8 +38,41 @@ export function MobileNav() {
   useEffect(() => {
     if (!open) return
 
+    /**
+     * Fokusfalle des Dialogs. `aria-modal` verspricht Screenreadern, dass der
+     * Hintergrund nicht erreichbar ist — ohne diese Schleife sprang Tab nach
+     * dem letzten Menüpunkt trotzdem in die Seite dahinter.
+     *
+     * Escape schließt und gibt den Fokus an den Menü-Knopf zurück; vorher
+     * landete er auf dem Dokumentkörper und Tastaturnutzer standen am
+     * Seitenanfang.
+     */
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false)
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setOpen(false)
+        toggleRef.current?.focus()
+        return
+      }
+
+      if (event.key !== 'Tab' || !drawerRef.current) return
+
+      const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+
+      if (event.shiftKey && (active === first || !drawerRef.current.contains(active))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (active === last || !drawerRef.current.contains(active))) {
+        event.preventDefault()
+        first.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
 
@@ -108,6 +142,7 @@ export function MobileNav() {
       />
 
       <div
+        ref={drawerRef}
         id="mobile-nav-drawer"
         role="dialog"
         aria-modal="true"
@@ -149,7 +184,17 @@ export function MobileNav() {
           ))}
         </ul>
 
-        <div className="border-t border-outline-variant px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        <div className="flex flex-col gap-3 border-t border-outline-variant px-5 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          <a
+            href={company.whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 rounded-lg border border-outline-variant px-6 py-3.5 text-sm font-bold uppercase tracking-wider text-on-surface transition-colors hover:bg-surface-high"
+          >
+            <Icon name="chat" className="text-xl" />
+            WhatsApp schreiben
+            <span className="sr-only"> (öffnet in neuem Fenster)</span>
+          </a>
           <Link
             href="/#ankauf"
             onClick={() => setOpen(false)}

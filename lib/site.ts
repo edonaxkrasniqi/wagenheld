@@ -17,6 +17,14 @@ export const company = {
   country: 'DE',
   phone: '0179 1596072',
   phoneHref: 'tel:+491791596072',
+  /**
+   * WhatsApp-Kontakt auf derselben Mobilnummer. `wa.me` ist der offizielle
+   * Kurzlink: Er lädt nichts, solange niemand klickt, und öffnet dann die
+   * WhatsApp-App bzw. WhatsApp Web. Deshalb ist er ein Link und kein Widget —
+   * ein eingebettetes Chat-Fenster würde schon beim Seitenaufruf Daten an
+   * Meta übertragen und bräuchte eine Einwilligung.
+   */
+  whatsappHref: 'https://wa.me/491791596072',
   email: 'info@automobilzentrum-wagenheld.de',
   mobileDeUrl: 'https://home.mobile.de/AUTOMOBILZENTRUMWAGENHELDGBR',
   /**
@@ -40,7 +48,7 @@ export const company = {
  * hochziehen — die Angabe ist Teil der Informationspflicht nach Art. 13 DSGVO
  * und eine veraltete ist schlechter als gar keine.
  */
-export const privacyPolicyDate = '26. August 2026'
+export const privacyPolicyDate = '10. Oktober 2026'
 
 /**
  * Auftragsverarbeiter und sonstige Dritte, die auf dieser Seite tatsächlich
@@ -77,4 +85,44 @@ export const processors = {
 export const supervisoryAuthority = {
   name: 'Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg',
   address: 'Heilbronner Straße 35, 70191 Stuttgart',
+} as const
+
+/**
+ * Öffnungszeiten laut Google-Unternehmensprofil, abgelesen am 10.10.2026.
+ * Eine andere Quelle (kfz-romes.de) führte abweichende, offenbar veraltete
+ * Zeiten — maßgeblich ist das vom Betrieb selbst gepflegte Google-Profil.
+ * Ändern sich die Zeiten dort, hier nachziehen: Kontaktleiste, Footer und
+ * strukturierte Daten lesen alle von dieser Liste.
+ */
+export const openingHours = [
+  {
+    label: 'Montag – Freitag',
+    hours: '09:00 – 18:00 Uhr',
+    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '09:00',
+    closes: '18:00',
+  },
+  {
+    label: 'Samstag',
+    hours: '09:00 – 13:00 Uhr',
+    days: ['Saturday'],
+    opens: '09:00',
+    closes: '13:00',
+  },
+  { label: 'Sonntag', hours: 'geschlossen', days: ['Sunday'], opens: null, closes: null },
+] as const
+
+/** Kurzform für knappe Stellen wie die Kontaktleiste. */
+export const openingHoursShort = 'Mo–Fr 9–18 Uhr · Sa 9–13 Uhr'
+
+/**
+ * Anbieter des Messengers hinter dem WhatsApp-Link. Kein Auftragsverarbeiter
+ * im engeren Sinn, steht aber namentlich in der Datenschutzerklärung (Abschnitt
+ * WhatsApp) — und muss deshalb hier gepflegt werden, nicht in der Seite.
+ */
+export const messenger = {
+  name: 'WhatsApp Ireland Limited',
+  address: 'Merrion Road, Dublin 4, D04 X2K5, Irland',
+  parent: 'Meta Platforms, Inc.',
+  privacyUrl: 'https://www.whatsapp.com/legal/privacy-policy-eea',
 } as const

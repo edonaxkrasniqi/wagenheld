@@ -4,6 +4,7 @@ import { Header } from '@/components/sections/Header'
 import { Footer } from '@/components/sections/Footer'
 import {
   company,
+  messenger,
   privacyPolicyDate,
   processors,
   supervisoryAuthority,
@@ -111,6 +112,12 @@ export default function DatenschutzPage() {
                 einem sicheren und stabilen Betrieb der Website (Art. 6 Abs. 1
                 lit. f DSGVO). Mit dem Anbieter besteht ein Vertrag zur
                 Auftragsverarbeitung nach Art. 28 DSGVO.
+              </p>
+              <p className="mt-2">
+                Wir selbst speichern diese Protokolle nicht und werten sie nicht
+                aus. Der Anbieter verarbeitet sie nur so lange, wie es für die
+                Auslieferung der Seite und die Abwehr von Angriffen erforderlich
+                ist.
               </p>
               <p className="mt-2">
                 {processors.hosting.name} betreibt ein weltweites Servernetz. Eine
@@ -252,8 +259,65 @@ export default function DatenschutzPage() {
               </p>
             </section>
 
+            {/*
+              Neu am 10.10.2026 mit dem WhatsApp-Link (lib/site.ts →
+              company.whatsappHref). Bewusst ohne die Bausteine aus
+              Kanzlei-Mustern, die Behauptungen über die Praxis im Betrieb
+              aufstellen (etwa zum Adressbuch des Firmenhandys) — solche
+              Zusagen gehören nur hierher, wenn der Kunde sie bestätigt hat.
+            */}
             <section>
-              <h2 className="text-lg font-bold text-on-surface mb-2">7. Cookies</h2>
+              <h2 className="text-lg font-bold text-on-surface mb-2">
+                7. Kontaktaufnahme über WhatsApp
+              </h2>
+              <p>
+                Auf dieser Website verlinken wir auf unseren WhatsApp-Kontakt.
+                Der Link lädt beim Aufruf der Seite keine Inhalte von WhatsApp;
+                eine Verbindung entsteht erst, wenn Sie ihn anklicken. Anbieter
+                des Dienstes ist die {messenger.name}, {messenger.address}, ein
+                Unternehmen der {messenger.parent}. Wir nutzen dafür die
+                Geschäftsversion WhatsApp Business.
+              </p>
+              <p className="mt-2">
+                Wenn Sie uns über WhatsApp schreiben, verarbeiten wir Ihre
+                Mobilfunknummer, Ihren WhatsApp-Profilnamen und den Inhalt Ihrer
+                Nachrichten, um Ihr Anliegen zu beantworten. Rechtsgrundlage ist
+                Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage den Kauf oder
+                Verkauf eines Fahrzeugs betrifft, im Übrigen Art. 6 Abs. 1 lit. f
+                DSGVO aufgrund unseres Interesses, Anfragen über den von Ihnen
+                gewählten Kanal zügig zu beantworten.
+              </p>
+              <p className="mt-2">
+                Die Inhalte Ihrer Nachrichten sind bei WhatsApp
+                Ende-zu-Ende-verschlüsselt. Verbindungs- und Nutzungsdaten wie
+                Ihre Telefonnummer, Zeitpunkte und Geräteangaben verarbeitet der
+                Anbieter jedoch in eigener Verantwortung; dabei kann es zu einer
+                Übermittlung an die {messenger.parent} in den Vereinigten Staaten
+                kommen. {messenger.parent} ist nach dem EU-US Data Privacy
+                Framework zertifiziert; die Übermittlung stützt sich auf den
+                Angemessenheitsbeschluss der Europäischen Kommission nach Art. 45
+                DSGVO. Einzelheiten finden Sie in der{' '}
+                <a
+                  href={messenger.privacyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-gold-ink"
+                >
+                  Datenschutzrichtlinie von WhatsApp
+                </a>
+                .
+              </p>
+              <p className="mt-2">
+                Wenn Sie WhatsApp nicht nutzen möchten, erreichen Sie uns ebenso
+                per Telefon, E-Mail oder über das Formular. WhatsApp-Nachrichten
+                löschen wir spätestens sechs Monate nach Abschluss der
+                Bearbeitung, soweit keine gesetzlichen Aufbewahrungspflichten
+                entgegenstehen.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-bold text-on-surface mb-2">8. Cookies</h2>
               <p>
                 Diese Website verwendet keine Cookies zu Analyse- oder
                 Marketingzwecken und bindet keine externen Dienste ein, die vor
@@ -266,12 +330,12 @@ export default function DatenschutzPage() {
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                8. Externe Links
+                9. Externe Links
               </h2>
               <p>
                 Von dieser Website führen Links zu externen Angeboten, unter
-                anderem zu unserem Fahrzeugbestand auf mobile.de und zu einer
-                Kartensuche. Diese Anbieter werden erst aktiv, wenn Sie den Link
+                anderem zu unserem Fahrzeugbestand auf mobile.de, zu einer
+                Kartensuche bei OpenStreetMap und zu WhatsApp. Diese Anbieter werden erst aktiv, wenn Sie den Link
                 anklicken. Für deren Datenverarbeitung gelten die
                 Datenschutzerklärungen der jeweiligen Anbieter.
               </p>
@@ -279,7 +343,7 @@ export default function DatenschutzPage() {
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                9. Ihre Rechte
+                10. Ihre Rechte
               </h2>
               <p>
                 Sie haben jederzeit das Recht auf Auskunft über Ihre bei uns
@@ -293,11 +357,46 @@ export default function DatenschutzPage() {
                 Datenschutz-Aufsichtsbehörde zu. Für uns zuständig ist{' '}
                 {supervisoryAuthority.name}, {supervisoryAuthority.address}.
               </p>
+              <p className="mt-2">
+                Sie sind weder gesetzlich noch vertraglich verpflichtet, uns
+                personenbezogene Daten bereitzustellen. Ohne Ihre Kontaktdaten
+                können wir eine Anfrage allerdings nicht beantworten. Eine
+                automatisierte Entscheidungsfindung einschließlich Profiling nach
+                Art. 22 DSGVO findet nicht statt.
+              </p>
+            </section>
+
+            {/*
+              Art. 21 Abs. 4 DSGVO verlangt, dass auf das Widerspruchsrecht
+              ausdrücklich und von anderen Informationen getrennt hingewiesen
+              wird. Ein Halbsatz in der Rechte-Aufzählung genügt dafür nicht —
+              deshalb ein eigener, hervorgehobener Abschnitt.
+            */}
+            <section className="rounded-lg border-2 border-on-surface/20 p-5">
+              <h2 className="text-lg font-bold text-on-surface mb-2">
+                11. Ihr Widerspruchsrecht nach Art. 21 DSGVO
+              </h2>
+              <p className="font-semibold text-on-surface">
+                Soweit wir Ihre personenbezogenen Daten auf Grundlage unseres
+                berechtigten Interesses verarbeiten (Art. 6 Abs. 1 lit. f DSGVO),
+                haben Sie das Recht, aus Gründen, die sich aus Ihrer besonderen
+                Situation ergeben, jederzeit Widerspruch gegen diese Verarbeitung
+                einzulegen.
+              </p>
+              <p className="mt-2">
+                Legen Sie Widerspruch ein, verarbeiten wir die betroffenen Daten
+                nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe
+                für die Verarbeitung nachweisen, die Ihre Interessen, Rechte und
+                Freiheiten überwiegen, oder die Verarbeitung dient der
+                Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.
+                Für Direktwerbung verwenden wir Ihre Daten nicht. Ein formloser
+                Widerspruch an die unter Ziffer 1 genannten Kontaktdaten genügt.
+              </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                10. SSL-/TLS-Verschlüsselung
+                12. SSL-/TLS-Verschlüsselung
               </h2>
               <p>
                 Diese Seite nutzt aus Sicherheitsgründen durchgehend eine
@@ -308,7 +407,7 @@ export default function DatenschutzPage() {
 
             <section>
               <h2 className="text-lg font-bold text-on-surface mb-2">
-                11. Stand dieser Erklärung
+                13. Stand dieser Erklärung
               </h2>
               <p>{privacyPolicyDate}</p>
             </section>
