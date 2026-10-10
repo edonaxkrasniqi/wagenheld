@@ -60,11 +60,15 @@ export const benefits: Benefit[] = [
     description: `Über unsere Partnerbank ${company.financePartnerBank} möglich`,
   },
   {
-    icon: 'gavel',
+    // Schild statt Richterhammer — `gavel` stand für Recht, nicht für Schutz.
+    icon: 'shield',
     headline: 'Garantie',
-    // OFFEN (Ari): Garantiegeber, Deckungsumfang und Kosten fehlen weiterhin.
-    // § 479 BGB verlangt Inhalt und Bedingungen, sobald damit geworben wird.
-    description: 'Optional bis 36 Monate',
+    // Garantiegeber, Deckungsumfang und Kosten liegen nicht vor. Deshalb steht
+    // die Laufzeit als *optionale Verlängerung* da, mit ausdrücklichem Verweis
+    // auf die Bedingungen — keine pauschale Zusage. Sobald die Bedingungen
+    // vorliegen, gehören Garantiegeber und Umfang hierher (§ 479 BGB; im
+    // Kaufvertrag sind sie ohnehin Pflicht).
+    description: 'Garantieverlängerung optional bis 36 Monate – Bedingungen auf Anfrage',
   },
   {
     icon: 'handshake',
